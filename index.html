@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nostrocket Mission Control</title>
+  </head>
+  <body>
+  <div id="container">
+    <div id="top">
+      <a href="#" onclick="document.getElementById('content').replaceChildren(window.missioncontrol.renderIdentity())">Identity Tree</a> <br />
+    </div>
+    <div id = "content">
+      WAITING FOR EVENTS
+
+    </div>
+  </div>
+
+
+
+  <script type="module" src="main.js"></script>
+  <script type="module" src="src/state/pubkey.js"></script>
+  <script type="module" src="src/helpers/events.js"></script>
+  </body>
+</html>
