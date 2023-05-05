@@ -14,13 +14,13 @@ export default function renderIdentityLayout() {
         // }
 
         const rootNode = state.identities().find(node => node.UniqueSovereignBy === '1Humanityrvhus5mFWRRzuJjtAbjk2qwww');
-        const USHIdentities = state.identities().filter(x => x.UniqueSovereignBy !== null && x.UniqueSovereignBy !== '')
+        let USHIdentities = state.identities().filter(x => x.UniqueSovereignBy !== null && x.UniqueSovereignBy !== '')
         document.getElementById("left-column").innerHTML = renderTree(USHIdentities, rootNode)
 
         state.identities().forEach(i => {
 
             const sovereignBy = i.UniqueSovereignBy;
-            if (sovereignBy === null || sovereignBy === '') {
+            if (sovereignBy === null || sovereignBy === '' && i.Name.length > 0 ) {
                 document.getElementById("right-column").appendChild(makePerson(i));
             }
         })
