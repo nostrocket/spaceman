@@ -1,3 +1,4 @@
+import showdown from "showdown"
 
 const classMap = {
     h1: 'title is-1',
@@ -15,7 +16,7 @@ const bindings = Object.keys(classMap)
     }));
 
 
-function makeParagraph(markdown) {
+export function makeParagraph(markdown) {
     let d;
     d = document.createElement("div")
     let md;
@@ -30,14 +31,14 @@ function makeParagraph(markdown) {
     return d
 }
 
-function makeLink(url, text) {
+export function makeLink(url, text) {
     let a = document.createElement("a")
     a.href = url
     a.innerText = text
     return a
 }
 
-function makeH3(title) {
+export function makeH3(title) {
     let h3 = document.createElement("h3")
     h3.className = "is-3"
     h3.innerText = title
@@ -55,5 +56,11 @@ export function makeItem(key, value) {
 export function makeText(text) {
     let s = document.createElement("span")
     s.innerText = text
+    return s
+}
+
+export function spacer() {
+    let s = document.createElement("span")
+    s.innerText = " "
     return s
 }

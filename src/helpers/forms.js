@@ -1,3 +1,5 @@
+import {identities} from "../state/state.js";
+
 export function makeTextField(label, placeholder, id, maxlength, existing) {
     let input;
     input = document.createElement("textarea")
@@ -29,7 +31,7 @@ export function makeTextInput(label, placeholder, id, maxlength, existing) {
     if (label === "Username") {
         var userameIsAlreadySet = false
         identities().forEach(function (v) {
-            if (v.Account === pubkey) {
+            if (v.Account === window.missioncontrol.pubkey) {
                 if (v.Name.length > 0) {
                     textInput.value = v.Name
                     textInput.readOnly = true

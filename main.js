@@ -4,6 +4,7 @@ import renderIdentities from './src/identity/identity.js'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 import {newsubrocket} from "./src/subrockets/newrocket.js";
+import {updateAccountDetails} from "./src/identity/updateProfile.js";
 //import { setupCounter } from './counter.js'
 
 // document.querySelector('#app').innerHTML = `
@@ -26,6 +27,7 @@ import {newsubrocket} from "./src/subrockets/newrocket.js";
 window.missioncontrol = {}
 window.missioncontrol.renderIdentity = renderIdentities
 window.missioncontrol.newSubrocket = newsubrocket
+window.missioncontrol.updateAccountDetails = updateAccountDetails
 
 window.missioncontrol.rootevents = {}
 window.missioncontrol.rootevents.IdentityRoot = "0a73208becd0b1a9d294e6caef14352047ab44b848930e6979937fe09effaf71"
