@@ -15,6 +15,5 @@
   "dependencies": {
     "nostr-tools": "^1.10.1",
     "showdown": "^2.1.0"
-  },
-  "homepage" : "http://pqingshuang.github.io/spaceman"
+  }
 }
