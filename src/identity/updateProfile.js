@@ -3,7 +3,7 @@ import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.
 import {makeH3, makeParagraph, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {makeTags} from "../helpers/tags.js";
-
+import {waitForKind0Ready,getKind0Object,kind0Objects} from "./kind0.js";
 export function updateAccountDetails() {
     let form = document.createElement("div")
     form.appendChild(usernameAndBioForm())
@@ -96,7 +96,7 @@ function usernameAndBioForm() {
     let pubkeyId = identities().filter(item => item.Account === window.missioncontrol.pubkey)
     if (pubkeyId.length === 0) {
         // no existing identity, try to get kind0 from other relays
-        getKind0Object(window.missioncontrol.pubkey,relays = ["wss://relay.damus.io"])
+        getKind0Object(window.missioncontrol.pubkey,["wss://relay.damus.io"])    
         waitForKind0Ready(function(){
             if (kind0Objects.get(window.missioncontrol.pubkey) !== undefined) {
                 if (kind0Objects.get(window.missioncontrol.pubkey).name.length > 0) {
@@ -122,7 +122,7 @@ function usernameAndBioForm() {
 
 
 
-    return createUsernameAndBioForm(div,haveExistingKind0,username,about)
+    return createUsernameAndBioForm(div,false,username,about)
 }
 
 
