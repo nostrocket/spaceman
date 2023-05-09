@@ -35,7 +35,7 @@ export function shares() {
     let s = []
     if (stateReady) {
         let  shares = Object.keys(currentState.shares);
-        shares.forEach(subrocket => {
+        shares.forEach(mirv => {
             // console.log(currentState.identity[account])
             i.push(currentState.identity[account])
         })

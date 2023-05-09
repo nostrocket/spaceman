@@ -5,7 +5,7 @@ export function makeTags(pubkey, type, r){
     tags = [["e", window.missioncontrol.rootevents.IgnitionEvent, "", "root"]]
     if (type === "identity") {tags.push(["e", window.missioncontrol.rootevents.IdentityRoot, "", "reply"])}
     if (type === "shares") {tags.push(["e", window.missioncontrol.rootevents.SharesRoot, "", "reply"])}
-    if (type === "subrockets") {tags.push(["e", window.missioncontrol.rootevents.SubrocketsRoot, "", "reply"])}
+    if (type === "mirvs") {tags.push(["e", window.missioncontrol.rootevents.MirvsRoot, "", "reply"])}
     if (!r) {
         if (pubkeyInIdentity(pubkey)){
             tags.push(["r", getReplyByAccount(pubkey), "", "reply"])

@@ -5,16 +5,16 @@ import {makeItem} from "../helpers/markdown.js";
 import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 
-export function newsubrocket() {
+export function newMirv() {
     let div = document.createElement("div")
-    div.appendChild(makeTextInput("Name", "Subrocket Name", "name input", 20, ""))
+    div.appendChild(makeTextInput("Name", "Rocket Name", "name input", 20, ""))
     div.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, "e624297b5a66775ee21a2565c023764bf6dc73cbbb0a1579fa5ff40ff50d59cd"))
     let b = document.createElement("button")
     b.innerText = "Do it!"
     b.onclick = function () {
-        newSubrocketName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value).then(x => {
+        newMirvName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value).then(x => {
             publish(x)
-            newSubrocketCapTable(document.getElementById( 'name input' ).value, x.id).then(y => {
+            newMirvCapTable(document.getElementById( 'name input' ).value, x.id).then(y => {
                 publish(y)
             })
         })
@@ -23,24 +23,24 @@ export function newsubrocket() {
     div.appendChild(b)
     if (currentState.shares) {
         let  shares = Object.keys(currentState.shares);
-        shares.forEach(subrocket => {
+        shares.forEach(mirv => {
             // console.log(currentState.identity[account])
             // i.push(currentState.identity[account])
-            div.appendChild(makeSubRocket(subrocket))
+            div.appendChild(makeNewMirv(mirv))
         })
     }
     return div
 }
-function makeSubRocket(subrocketName){
+function makeNewMirv(name){
     let s = document.createElement("div")
-    s.className = "subrocket"
-    s.id = subrocketName
-    let subrocketInfo = currentState.shares[subrocketName]
-    // console.log(subrocketInfo)
-    s.appendChild(makeH3(subrocketName))
+    s.className = "mirv"
+    s.id = name
+    let mirvInfo = currentState.shares[name]
+    // console.log(mirvInfo)
+    s.appendChild(makeH3(name))
 
-    for (let account in subrocketInfo) {
-        let cap = subrocketInfo[account]
+    for (let account in mirvInfo) {
+        let cap = mirvInfo[account]
         s.appendChild(makeItem("Name",getIdentityByAccount(account).Name))
         s.appendChild(makeItem("Last Lt Change", cap.LastLtChange))
         s.appendChild(makeItem("Lead Time", cap.LeadTime))
@@ -52,12 +52,12 @@ function makeSubRocket(subrocketName){
     return s
 }
 
-async function newSubrocketName(name, problem) {
+async function newMirvName(name, problem) {
     if (name.length > 3) {
         let content;
         content = JSON.stringify({rocket_id: name, problem_id: problem})
         let tags;
-        tags = makeTags(window.missioncontrol.pubkey, "subrockets")
+        tags = makeTags(window.missioncontrol.pubkey, "mirvs")
         let unsigned = makeUnsignedEvent(content, tags, 640600, window.missioncontrol.pubkey)
         let signed = await signAsynchronously(unsigned)
         return signed
@@ -69,7 +69,7 @@ async function newSubrocketName(name, problem) {
     }
 }
 
-async function newSubrocketCapTable(name, r) {
+async function newMirvCapTable(name, r) {
     if (name.length > 3) {
         let content;
         content = JSON.stringify({rocket_id: name})
