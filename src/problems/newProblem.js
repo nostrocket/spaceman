@@ -13,7 +13,7 @@ export function problems() {
     let div = createAnchor(window.missioncontrol.rootevents.ProblemRoot)
     div.innerText = window.missioncontrol.rootevents.ProblemRoot
     div.className = "problem"
-    let filter = {kinds: [641800], "#e": window.missioncontrol.rootevents.ProblemRoot };
+    let filter = {kinds: [641800], "#e": window.missioncontrol.rootevents.IgnitionEvent };
     ndk.fetchEvents(filter).then(e => {e.forEach(ei => {
         // ei.tags.forEach(x => {
         //     x.forEach(y => {
@@ -24,13 +24,14 @@ export function problems() {
         // })
         if (!problemMap.has(ei.id)) {problemMap.set(ei.id, ei)}
     })
-        problemMap.forEach(anchorEvent => {
-            anchorEvent.tags.forEach(tag => {
+        problemMap.forEach(e => {
+            console.log(e)
+            e.tags.forEach(tag => {
                 tag.forEach(tagInner => {
                     if (tagInner === "reply") {
-                        if (document.getElementById(tag[1]) && !document.getElementById(anchorEvent.id)) {
-                            let d = createAnchor(anchorEvent.id)
-                            d.innerText = anchorEvent.id
+                        if (document.getElementById(tag[1]) && !document.getElementById(e.id)) {
+                            let d = createAnchor(e.id)
+                            d.innerText = e.id
                             d.className = "problem"
                             document.getElementById(tag[1]).appendChild(d)
                         }
@@ -64,7 +65,7 @@ export function newProblemForm() {
             ndkEvent.kind = 641800;
             ndkEvent.content = document.getElementById( 'title input' ).value;
             ndkEvent.tags = [["e", window.missioncontrol.rootevents.IgnitionEvent, "", "root"],
-                ["e", window.missioncontrol.rootevents.ProblemRoot, "", "reply"]]
+                ["e", document.getElementById( 'parent input' ).value, "", "reply"]]
             //ndkEvent.sign().then(function (){console.log(ndkEvent.rawEvent())})
             ndkEvent.publish().then(function (){console.log(ndkEvent.rawEvent())})
             //await ndkEvent.publish();
