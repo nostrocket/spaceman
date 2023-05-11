@@ -25,7 +25,7 @@ export function problems() {
                     if (tagInner === "reply") {
                         if (document.getElementById(tag[1]) && !document.getElementById(e.id)) {
                             let d = createProblemDiv(e)
-                            d.appendChild(createReplyDiv(e, tag[1]))
+                            d.appendChild(createReplyDiv(e))
                             document.getElementById(tag[1]).appendChild(d)
                         }
                     }
@@ -50,12 +50,12 @@ function createProblemDiv(e) {
     return d
 }
 
-function createReplyDiv(e, parent) {
+function createReplyDiv(e) {
     let d = document.createElement("div")
     d.className = "reply_problem"
     d.appendChild(createButton("Log new problem", function () {
         let p = createProblemDiv(e)
-        p.appendChild(newProblemForm(parent))
+        p.appendChild(newProblemForm(e.id))
         document.getElementById("problems").replaceChildren(p)
     }))
     return d
@@ -104,7 +104,7 @@ export function newProblemForm(parent) {
             //ndkEvent.sign().then(function (){console.log(ndkEvent.rawEvent())})
             ndkEvent.publish().then(function (){
                 console.log(ndkEvent.rawEvent());
-                document.getElementById(document.getElementById( 'parent input' ).value).appendChild(createProblemDiv(ndkEvent))
+                document.getElementById(parent).appendChild(createProblemDiv(ndkEvent))
             })
             //await ndkEvent.publish();
         });
