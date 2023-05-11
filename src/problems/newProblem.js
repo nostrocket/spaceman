@@ -10,38 +10,69 @@ await ndk.connect();
 const problemMap = new Map();
 
 export function problems() {
-    let div = createAnchor(window.spaceman.rootevents.ProblemRoot)
-    div.innerText = window.spaceman.rootevents.ProblemRoot
-    div.className = "problem"
+    let div = createAnchor("problems")
+    //div.innerText = window.spaceman.rootevents.ProblemRoot
+    //div.className = "problem"
     let filter = {kinds: [641800], "#e": window.spaceman.rootevents.IgnitionEvent };
     ndk.fetchEvents(filter).then(e => {e.forEach(ei => {
-        // ei.tags.forEach(x => {
-        //     x.forEach(y => {
-        //         if (y === "reply") {
-        //             console.log(x[1])
-        //         }
-        //     })
-        // })
         if (!problemMap.has(ei.id)) {problemMap.set(ei.id, ei)}
     })
+        div.appendChild(createProblemDiv(problemMap.get(window.spaceman.rootevents.ProblemRoot)))
         problemMap.forEach(e => {
             console.log(e)
             e.tags.forEach(tag => {
                 tag.forEach(tagInner => {
                     if (tagInner === "reply") {
                         if (document.getElementById(tag[1]) && !document.getElementById(e.id)) {
-                            let d = createAnchor(e.id)
-                            d.innerText = e.id
-                            d.className = "problem"
+                            let d = createProblemDiv(e)
+                            d.appendChild(createReplyDiv(e, tag[1]))
                             document.getElementById(tag[1]).appendChild(d)
                         }
                     }
                 })
             })
         })
-        div.appendChild(newProblemForm())
+        div.appendChild(createButton("Advanced", function () {
+            div.replaceChildren(newProblemForm())
+        }))
     })
     return div
+}
+
+function createProblemDiv(e) {
+    let d = createAnchor(e.id)
+    d.innerText = "Waiting for content"
+    if (e.content.length > 0) {
+        d.innerText = e.content;
+    }
+    d.innerText += "\n\n"+e.id
+    d.className = "problem"
+    return d
+}
+
+function createReplyDiv(e, parent) {
+    let d = document.createElement("div")
+    d.className = "reply_problem"
+    d.appendChild(createButton("Log new problem", function () {
+        let p = createProblemDiv(e)
+        p.appendChild(newProblemForm(parent))
+        document.getElementById("problems").replaceChildren(p)
+    }))
+    return d
+}
+
+function createButton(name, onclick, classname) {
+    let b = document.createElement("button")
+    if (name) {
+        b.innerText = name
+    }
+    if (onclick) {
+        b.onclick = onclick
+    }
+    if (classname) {
+        b.className = classname
+    }
+    return b
 }
 
 function createAnchor(id) {
@@ -51,27 +82,35 @@ function createAnchor(id) {
 }
 
 
-export function newProblemForm() {
+export function newProblemForm(parent) {
     let div = document.createElement("div")
     div.appendChild(makeTextInput("Title", "Problem: summarize the problem you face or have observed in less than 100 characters", "title input", 100, ""))
-    div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
+    if (!parent) {
+        div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
+    }
     div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, ""))
-    let b = document.createElement("button")
-    b.innerText = "Publish!"
-    b.onclick = function () {
+    div.appendChild(createButton("Publish!",
+        function () {
         //create anchor event
         nip07signer.user().then(async (user) => {
+            if (!parent) {
+                parent = document.getElementById( 'title input' ).value;
+            }
             const ndkEvent = new NDKEvent(ndk);
             ndkEvent.kind = 641800;
             ndkEvent.content = document.getElementById( 'title input' ).value;
             ndkEvent.tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
-                ["e", document.getElementById( 'parent input' ).value, "", "reply"]]
+                ["e", parent, "", "reply"]]
             //ndkEvent.sign().then(function (){console.log(ndkEvent.rawEvent())})
-            ndkEvent.publish().then(function (){console.log(ndkEvent.rawEvent())})
+            ndkEvent.publish().then(function (){
+                console.log(ndkEvent.rawEvent());
+                document.getElementById(document.getElementById( 'parent input' ).value).appendChild(createProblemDiv(ndkEvent))
+            })
             //await ndkEvent.publish();
         });
         //create 641802
-    }
-    div.appendChild(b)
+    },
+        "publish"
+    ))
     return div
 }

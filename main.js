@@ -37,7 +37,7 @@ window.spaceman.rootevents.SharesRoot = "7fd9810bdb8bc635633cc4e3d0888e395420aed
 window.spaceman.rootevents.MirvsRoot = "c7f87218e62f6d41fa2f5b2480210ed1d48b2609e03e9b4b500a3b64e3c08554"
 window.spaceman.rootevents.IgnitionEvent = "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c"
 window.spaceman.rootevents.ReplayRoot = "24c30ad7f036ed49379b5d1209836d1ff6795adb34da2d3e4cabc47dc9dfef21"
-window.spaceman.rootevents.ProblemRoot = "8d3bb1ebbaeb005857c302c81f2ffa98b952e1d59a61a0bfc11c211f38bce534"
+window.spaceman.rootevents.ProblemRoot = "77c3bf5382b62d16a70df8e2932a512e2fce72458ee47b73feaef8ae8b9bd62b"
 
 setTimeout(function(){
     if (window.nostr) {
