@@ -33,7 +33,7 @@ export function makeTextInput(label, placeholder, id, maxlength, existing) {
     if (label === "Username") {
         var userameIsAlreadySet = false
         identities().forEach(function (v) {
-            if (v.Account === window.missioncontrol.pubkey) {
+            if (v.Account === window.spaceman.pubkey) {
                 if (v.Name.length > 0) {
                     textInput.value = v.Name
                     textInput.readOnly = true

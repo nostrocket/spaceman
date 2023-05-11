@@ -57,11 +57,11 @@ async function newMirvName(name, problem) {
         let content;
         content = JSON.stringify({rocket_id: name, problem_id: problem})
         let tags;
-        tags = makeTags(window.missioncontrol.pubkey, "mirvs")
-        let unsigned = makeUnsignedEvent(content, tags, 640600, window.missioncontrol.pubkey)
+        tags = makeTags(window.spaceman.pubkey, "mirvs")
+        let unsigned = makeUnsignedEvent(content, tags, 640600, window.spaceman.pubkey)
         let signed = await signAsynchronously(unsigned)
         return signed
-        // await sendEventToRocket(content, tags, 640600, window.missioncontrol.pubkey).then(x =>{
+        // await sendEventToRocket(content, tags, 640600, window.spaceman.pubkey).then(x =>{
         //     return x
         // })
     } else {
@@ -74,11 +74,11 @@ async function newMirvCapTable(name, r) {
         let content;
         content = JSON.stringify({rocket_id: name})
         let tags;
-        tags = makeTags(window.missioncontrol.pubkey, "shares", r)
-        let unsigned = makeUnsignedEvent(content, tags, 640208, window.missioncontrol.pubkey)
+        tags = makeTags(window.spaceman.pubkey, "shares", r)
+        let unsigned = makeUnsignedEvent(content, tags, 640208, window.spaceman.pubkey)
         let signed = await signAsynchronously(unsigned)
         return signed
-        // await sendEventToRocket(content, tags, 640208, window.missioncontrol.pubkey).then(x =>{
+        // await sendEventToRocket(content, tags, 640208, window.spaceman.pubkey).then(x =>{
         //     return x
         // })
     } else {

@@ -53,8 +53,8 @@ function createAddButton(identity,onclick) {
 
     // Add an event listener to the button
     button.onclick = function () {
-        if (state.pubkeyInIdentity(window.missioncontrol.pubkey)) {
-            const USH = state.identities().find(x => x.Account === window.missioncontrol.pubkey).UniqueSovereignBy
+        if (state.pubkeyInIdentity(window.spaceman.pubkey)) {
+            const USH = state.identities().find(x => x.Account === window.spaceman.pubkey).UniqueSovereignBy
             if (USH != null && USH !== '') {
                 addToIdentityTree(identity.Account)
             } else {
@@ -75,8 +75,8 @@ async function addToIdentityTree(account) {
     let content;
     content = JSON.stringify({target: account, maintainer: false, ush: true, character: false})
     let tags;
-    tags = makeTags(window.missioncontrol.pubkey, "identity")
-    let unsigned = makeUnsignedEvent(content, tags, 640402, window.missioncontrol.pubkey)
+    tags = makeTags(window.spaceman.pubkey, "identity")
+    let unsigned = makeUnsignedEvent(content, tags, 640402, window.spaceman.pubkey)
     signAsynchronously(unsigned).then(signed => {
         console.log(signed)
         publish(signed)

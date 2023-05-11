@@ -10,10 +10,10 @@ await ndk.connect();
 const problemMap = new Map();
 
 export function problems() {
-    let div = createAnchor(window.missioncontrol.rootevents.ProblemRoot)
-    div.innerText = window.missioncontrol.rootevents.ProblemRoot
+    let div = createAnchor(window.spaceman.rootevents.ProblemRoot)
+    div.innerText = window.spaceman.rootevents.ProblemRoot
     div.className = "problem"
-    let filter = {kinds: [641800], "#e": window.missioncontrol.rootevents.IgnitionEvent };
+    let filter = {kinds: [641800], "#e": window.spaceman.rootevents.IgnitionEvent };
     ndk.fetchEvents(filter).then(e => {e.forEach(ei => {
         // ei.tags.forEach(x => {
         //     x.forEach(y => {
@@ -64,7 +64,7 @@ export function newProblemForm() {
             const ndkEvent = new NDKEvent(ndk);
             ndkEvent.kind = 641800;
             ndkEvent.content = document.getElementById( 'title input' ).value;
-            ndkEvent.tags = [["e", window.missioncontrol.rootevents.IgnitionEvent, "", "root"],
+            ndkEvent.tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
                 ["e", document.getElementById( 'parent input' ).value, "", "reply"]]
             //ndkEvent.sign().then(function (){console.log(ndkEvent.rawEvent())})
             ndkEvent.publish().then(function (){console.log(ndkEvent.rawEvent())})

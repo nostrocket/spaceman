@@ -68,7 +68,7 @@ function createUsernameAndBioForm(div,haveExistingKind0,username,about){
     div.appendChild(makeH3("Create or modify your Nostrocket profile"))
     div.appendChild(makeParagraph("* Nostrocket usernames **cannot** be changed once set for your Pubkey   \n* Nostrocket usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
     if (haveExistingKind0) {
-        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(window.missioncontrol.pubkey).name + "**_ now."))
+        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(window.spaceman.pubkey).name + "**_ now."))
     }
     div.appendChild(makeTextInput("Username", "Name or Pseudonym", "name input", 20, username))
 
@@ -80,7 +80,7 @@ function updateUsernameAndBioForm(div,haveExistingKind0,username,about){
     div.appendChild(makeH3("Create or modify your Nostrocket profile"))
     div.appendChild(makeParagraph("* Nostrocket usernames **cannot** be changed once set for your Pubkey   \n* Nostrocket usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
     if (haveExistingKind0) {
-        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(window.missioncontrol.pubkey).name + "**_ now."))
+        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(window.spaceman.pubkey).name + "**_ now."))
     }
     div.appendChild(makeTextInput("Username", "Name or Pseudonym", "name input", 20, username))
 
@@ -93,18 +93,18 @@ function usernameAndBioForm() {
     let about = ""
     let haveExistingIdentity = false
     let haveExistingKind0 = false
-    let pubkeyId = identities().filter(item => item.Account === window.missioncontrol.pubkey)
+    let pubkeyId = identities().filter(item => item.Account === window.spaceman.pubkey)
     if (pubkeyId.length === 0) {
         // no existing identity, try to get kind0 from other relays
-        getKind0Object(window.missioncontrol.pubkey,["wss://relay.damus.io"])    
+        getKind0Object(window.spaceman.pubkey,["wss://relay.damus.io"])
         waitForKind0Ready(function(){
-            if (kind0Objects.get(window.missioncontrol.pubkey) !== undefined) {
-                if (kind0Objects.get(window.missioncontrol.pubkey).name.length > 0) {
-                    username = kind0Objects.get(window.missioncontrol.pubkey).name
+            if (kind0Objects.get(window.spaceman.pubkey) !== undefined) {
+                if (kind0Objects.get(window.spaceman.pubkey).name.length > 0) {
+                    username = kind0Objects.get(window.spaceman.pubkey).name
                     haveExistingKind0 = true
                 }
-                if (kind0Objects.get(window.missioncontrol.pubkey).about.length > 0) {
-                    about = kind0Objects.get(window.missioncontrol.pubkey).about
+                if (kind0Objects.get(window.spaceman.pubkey).about.length > 0) {
+                    about = kind0Objects.get(window.spaceman.pubkey).about
                     haveExistingKind0 = true
                 }
                 updateUsernameAndBioForm(div,haveExistingKind0,username,about)
@@ -130,8 +130,8 @@ function usernameAndBioForm() {
 async function setBio(name, about) {
     if ((name.length > 0) || (about.length > 0)) {
         let content = JSON.stringify({name: name, about: about})
-        let tags = makeTags(window.missioncontrol.pubkey, "identity")
-        signAsynchronously(makeUnsignedEvent(content, tags, 640400, window.missioncontrol.pubkey)).then(signed => {
+        let tags = makeTags(window.spaceman.pubkey, "identity")
+        signAsynchronously(makeUnsignedEvent(content, tags, 640400, window.spaceman.pubkey)).then(signed => {
             publish(signed)
         })
     } else {
