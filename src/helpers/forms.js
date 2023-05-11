@@ -9,7 +9,9 @@ export function makeTextField(label, placeholder, id, maxlength, existing) {
     }
     input.placeholder = placeholder
     input.id = id
-    input.maxLength = maxlength
+    if (maxlength > 0) {
+        input.maxLength = maxlength
+    }
     return makeFormField(label, input)
 }
 

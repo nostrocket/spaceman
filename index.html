@@ -11,7 +11,8 @@
     <div id="top">
       <a href="#" onclick="document.getElementById('content').replaceChildren(window.missioncontrol.newMirv())">Launch A New Rocket</a> |
       <a href="#" onclick="document.getElementById('content').replaceChildren(window.missioncontrol.updateAccountDetails())">Update Account Details</a> |
-      <a href="#" onclick="document.getElementById('content').replaceChildren(window.missioncontrol.renderIdentity())">Identity Tree</a>
+      <a href="#" onclick="document.getElementById('content').replaceChildren(window.missioncontrol.renderIdentity())">Identity Tree</a> |
+      <a href="#" onclick="document.getElementById('content').replaceChildren(window.missioncontrol.displayProblems())">Problem Tracker</a>
     </div>
     <div id = "content">
       WAITING FOR EVENTS
@@ -22,7 +23,6 @@
 
 
   <script type="module" src="main.js"></script>
-  <script type="module" src="src/state/pubkey.js"></script>
   <script type="module" src="src/helpers/events.js"></script>
   </body>
 </html>
