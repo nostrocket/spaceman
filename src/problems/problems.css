@@ -1,6 +1,21 @@
-.problem {
-    padding: 10px;
-    border-color: #f9f9f9;
+.anchor {
+    display: block;
+    border-color: rgba(250, 122, 11, 0.8);
     border-width: thin;
-    border-style: solid;
+    border-left-style: solid;
+    border-top-style: solid;
+
+}
+
+.problem {
+    padding: 6px;
+}
+
+.children_box {
+    padding-left: 2%;
+}
+
+.reply_problem {
+    display: inline-flex;
+
 }
