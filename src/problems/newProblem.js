@@ -45,7 +45,7 @@ export function problems() {
                 console.log(e)
                 let anchor = getTagContent(e, "reply")
                 if (document.getElementById(anchor+"_problem") && !document.getElementById(e.id)) {
-                    let d = createProblemDiv(problemMap.get(anchor), e)
+                    let d = createProblemContent(e)//createProblemDiv(problemMap.get(anchor), e)
                     document.getElementById(anchor+"_problem").replaceWith(d)
 
                 }
@@ -70,7 +70,7 @@ function getTagContent(event, tagName) {
     return parentID
 }
 
-function createProblemDiv(e, contentEvent) {
+function createProblemDiv(e) {
     if (e) {
         let d = document.createElement("div")
         d.id = e.id+"_problem_box"
@@ -82,26 +82,31 @@ function createProblemDiv(e, contentEvent) {
         // r.id = r.id + "_reply"
         // r.appendChild(createReplyDiv(e))
         // p.appendChild(r)
-        if (!contentEvent) {
+
             p.innerText = "Waiting for content"
             if (e.content.length > 0) {
                 p.innerText = e.content;
             }
             p.innerText += "\n\n" + e.id
-        }
-        if (contentEvent) {
-            //p.id = contentEvent.id
-            p.innerHTML = "<h3>" + getTagContent(contentEvent, "title") + "</h3>"
-            p.innerHTML += "<p>" + contentEvent.content + "</p>"
-            p.innerHTML += e.id
-        }
+
+
         p.className = "problem"
         c.className = "children_box"
-        p.appendChild(createReplyDiv(e))
-        d.append(p, c)
+        //p.appendChild()
+        d.append(p, createReplyDiv(e), c)
         return d
     }
     return null
+}
+
+function createProblemContent(e) {
+    let p = document.createElement("div")
+    p.id = e.id + "_problem"
+        //p.id = contentEvent.id
+        p.innerHTML = "<h3>" + getTagContent(e, "title") + "</h3>"
+        p.innerHTML += "<p>" + e.content + "</p>"
+        p.innerHTML += e.id
+    return p
 }
 
 function createReplyDiv(e) {

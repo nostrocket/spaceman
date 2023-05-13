@@ -8,6 +8,7 @@
 }
 
 .problem {
+    display: block;
     padding: 6px;
 }
 
@@ -16,6 +17,6 @@
 }
 
 .reply_problem {
-    display: inline-flex;
-
+    display: block;
+    alignment: right;
 }
