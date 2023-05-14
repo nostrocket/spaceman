@@ -88,6 +88,7 @@ function createProblemDivFromAnchor(e) {
     if (e) {
         let d = document.createElement("div")
         d.id = e.id+"_problem_box"
+        d.className = "problem_box"
         let p = document.createElement("div")
         p.id = e.id + "_problem"
         let c = document.createElement("div")
