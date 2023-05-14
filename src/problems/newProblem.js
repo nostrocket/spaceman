@@ -22,10 +22,13 @@ export function problems() {
     //div.className = "problem"
     let filter = {kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
     if (ndk ==null){
-        ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
-        ndk.connect();
+        let ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
+        ndk_raed.connect();
+        
+    } else {
+        const ndk_read = ndk;
     }
-    ndk.fetchEvents(filter).then(e => {
+    ndk_read.fetchEvents(filter).then(e => {
         e.forEach(ei => {
             if (!problemEventMap.has(ei.id)) {
                 problemEventMap.set(ei.id, ei)
