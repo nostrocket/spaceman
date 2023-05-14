@@ -21,7 +21,15 @@ export function problems() {
     //div.innerText = window.spaceman.rootevents.ProblemRoot
     //div.className = "problem"
     let filter = {kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
-    ndk.fetchEvents(filter).then(e => {
+    let ndk_read = null
+    if (ndk === null){
+        ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
+        ndk_read.connect();
+        
+    } else {
+        ndk_read = ndk;
+    }
+    ndk_read.fetchEvents(filter).then(e => {
         e.forEach(ei => {
             if (!problemEventMap.has(ei.id)) {
                 problemEventMap.set(ei.id, ei)
