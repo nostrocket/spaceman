@@ -23,9 +23,8 @@ export function problems() {
     let filter = {kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
     let ndk_read = null
     if (ndk === null){
-        console.log('b',ndk)
         ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
-        ndk_raed.connect();
+        ndk_read.connect();
         
     } else {
         ndk_read = ndk;
