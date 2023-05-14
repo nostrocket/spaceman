@@ -1,8 +1,9 @@
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {publish} from "../helpers/events.js";
-import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
+
 import './problems.css'
 import {spacer} from "../helpers/markdown.js";
+import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
 
 const nip07signer = new NDKNip07Signer();
 let ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
@@ -31,19 +32,16 @@ export function problems() {
             if (e.kind === 641800) {
                 let parentAnchor = getTagContent(e, "reply")
                 if (document.getElementById(parentAnchor+"_children") && !document.getElementById(e.id+"_anchor")) {
-                    console.log(28)
                     //todo if parent doesn't exist in the DOM check in the map for it and create it then proceed
                     let anchorNode = createAnchor(e.id)
                     let problemContent = createProblemDivFromAnchor(e)
                     anchorNode.appendChild(problemContent)
                     document.getElementById(parentAnchor+"_children").append(anchorNode)
-
                 }
             }
         })
         problemEventMap.forEach(e => {
             if (e.kind === 641802) {
-                console.log(e)
                 let anchor = getTagContent(e, "reply")
                 if (document.getElementById(anchor+"_problem") && !document.getElementById(e.id)) {
                     let d = createProblemContent(e)//createProblemDiv(problemMap.get(anchor), e)
@@ -229,7 +227,7 @@ export function newProblemForm(parentAnchor, currentAnchor) {
                     let anchorEvent = makeAnchorEvent(parentAnchor, document.getElementById('title input').value)
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
-                        document.getElementById(parentAnchor).appendChild(createProblemDivFromAnchor(anchorEvent))
+                        document.getElementById(parentAnchor+"_children").appendChild(createProblemDivFromAnchor(anchorEvent))
                         problemEventMap.set(anchorEvent.id, anchorEvent)
                         currentAnchor = anchorEvent.id
                         send641802(currentAnchor, document.getElementById('title input').value, document.getElementById('description input').value)
@@ -252,7 +250,7 @@ function send641802(currentAnchor, title, content) {
     let contentEvent = create641802(currentAnchor, title, content)
     contentEvent.publish().then(() => {
         console.log(contentEvent.rawEvent())
-        document.getElementById(currentAnchor).replaceChildren(createProblemDivFromAnchor(problemEventMap.get(currentAnchor)))
+        document.getElementById(currentAnchor+"_problem").replaceChildren(createProblemDivFromAnchor(problemEventMap.get(currentAnchor)))
     })
 }
 

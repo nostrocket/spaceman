@@ -14,7 +14,8 @@
     "vite": "^4.3.2"
   },
   "dependencies": {
-    "@nostr-dev-kit/ndk": "^0.3.13",
+    "@nostr-dev-kit/ndk": "^0.3.141",
+    "@types/node": "^20.1.4",
     "hotjs": "^1.0.9",
     "nostr-tools": "^1.10.1",
     "showdown": "^2.1.0"
