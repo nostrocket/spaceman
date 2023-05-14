@@ -8,7 +8,7 @@ const nip07signer = new NDKNip07Signer();
 let ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
 await ndk.connect();
 
-const problemMap = new Map();
+const problemEventMap = new Map();
 
 export function problems() {
     let div = document.createElement("div")
@@ -20,14 +20,14 @@ export function problems() {
     let filter = {kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
     ndk.fetchEvents(filter).then(e => {
         e.forEach(ei => {
-            if (!problemMap.has(ei.id)) {
-                problemMap.set(ei.id, ei)
+            if (!problemEventMap.has(ei.id)) {
+                problemEventMap.set(ei.id, ei)
             }
         })
-        let prob = createProblemDivFromAnchor(problemMap.get(window.spaceman.rootevents.ProblemRoot))
+        let prob = createProblemDivFromAnchor(problemEventMap.get(window.spaceman.rootevents.ProblemRoot))
         anc.appendChild(prob)
         div.appendChild(anc)
-        problemMap.forEach(e => {
+        problemEventMap.forEach(e => {
             if (e.kind === 641800) {
                 let parentAnchor = getTagContent(e, "reply")
                 if (document.getElementById(parentAnchor+"_children") && !document.getElementById(e.id+"_anchor")) {
@@ -41,7 +41,7 @@ export function problems() {
                 }
             }
         })
-        problemMap.forEach(e => {
+        problemEventMap.forEach(e => {
             if (e.kind === 641802) {
                 console.log(e)
                 let anchor = getTagContent(e, "reply")
@@ -129,7 +129,7 @@ function createInteractionsBox(e) {
 
 function getCurrentProblemStateFromAnchorID(id) {
     let events = []
-    problemMap.forEach((e) => {
+    problemEventMap.forEach((e) => {
         if (e.kind === 641802) {
             let anchor = getTagContent(e, "reply")
             if (anchor === id) {
@@ -169,7 +169,7 @@ function getCurrentProblemStateFromAnchorID(id) {
 
 function createProblemDetail(e) {
     console.log(e)
-    problemMap.get()
+    problemEventMap.get()
     let p = createProblemContent(e)
     return p
 }
@@ -230,7 +230,7 @@ export function newProblemForm(parentAnchor, currentAnchor) {
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
                         document.getElementById(parentAnchor).appendChild(createProblemDivFromAnchor(anchorEvent))
-                        problemMap.set(anchorEvent.id, anchorEvent)
+                        problemEventMap.set(anchorEvent.id, anchorEvent)
                         currentAnchor = anchorEvent.id
                         send641802(currentAnchor, document.getElementById('title input').value, document.getElementById('description input').value)
                     })
@@ -252,7 +252,7 @@ function send641802(currentAnchor, title, content) {
     let contentEvent = create641802(currentAnchor, title, content)
     contentEvent.publish().then(() => {
         console.log(contentEvent.rawEvent())
-        document.getElementById(currentAnchor).replaceChildren(createProblemDivFromAnchor(problemMap.get(currentAnchor)))
+        document.getElementById(currentAnchor).replaceChildren(createProblemDivFromAnchor(problemEventMap.get(currentAnchor)))
     })
 }
 
