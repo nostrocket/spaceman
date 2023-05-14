@@ -20,6 +20,10 @@ export function problems() {
     //div.innerText = window.spaceman.rootevents.ProblemRoot
     //div.className = "problem"
     let filter = {kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
+    if (ndk ==null){
+        ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
+        ndk.connect();
+    }
     ndk.fetchEvents(filter).then(e => {
         e.forEach(ei => {
             if (!problemEventMap.has(ei.id)) {
