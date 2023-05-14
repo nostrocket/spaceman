@@ -21,12 +21,14 @@ export function problems() {
     //div.innerText = window.spaceman.rootevents.ProblemRoot
     //div.className = "problem"
     let filter = {kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
-    if (ndk ==null){
-        let ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
+    let ndk_read = null
+    if (ndk === null){
+        console.log('b',ndk)
+        ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
         ndk_raed.connect();
         
     } else {
-        const ndk_read = ndk;
+        ndk_read = ndk;
     }
     ndk_read.fetchEvents(filter).then(e => {
         e.forEach(ei => {
