@@ -29,6 +29,9 @@ window.spaceman.rootevents.ReplayRoot = "24c30ad7f036ed49379b5d1209836d1ff6795ad
 window.spaceman.rootevents.ProblemRoot = "7227dabb075105b1af089d49f20896ce8809f386b9263aa78224e00b630c9622"
 
 
+window.spaceman.CurrentState = {}
+window.spaceman.CurrentState.ready = false
+
 
 export var ndk : NDK|null = null 
 export var nip07signer :  NDKNip07Signer | null= null

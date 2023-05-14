@@ -1,10 +1,6 @@
-let stateReady = false
-let currentState
-
-
 export function waitForStateReady(callback) {
     var interval = setInterval(function() {
-        if (stateReady) {
+        if (window.spaceman.CurrentState.ready) {
             clearInterval(interval);
             callback();
         }
@@ -15,17 +11,16 @@ export function enMapState(e) {
     console.log()
     let state;
     state = JSON.parse(e.content)
-    currentState = state
-
-    stateReady = true
+    window.spaceman.CurrentState.state = state
+    window.spaceman.CurrentState.ready = true
 }
 
 export function identities() {
     let i = []
-    if (stateReady) {
-        let idents = Object.keys(currentState.identity);
+    if (window.spaceman.CurrentState.ready) {
+        let idents = Object.keys(window.spaceman.CurrentState.state.identity);
         idents.forEach(account => {
-            i.push(currentState.identity[account])
+            i.push(window.spaceman.CurrentState.state.identity[account])
         })
     }
     return i
@@ -33,26 +28,28 @@ export function identities() {
 
 export function shares() {
     let s = []
-    if (stateReady) {
-        let  shares = Object.keys(currentState.shares);
+    if (window.spaceman.CurrentState.ready) {
+        let  shares = Object.keys(window.spaceman.CurrentState.state.shares);
         shares.forEach(mirv => {
             // console.log(currentState.identity[account])
-            i.push(currentState.identity[account])
+            s.push(window.spaceman.CurrentState.state.identity[account])
         })
     }
-    return i
+    return s
 }
 
+
+
 export function pubkeyInIdentity(pubkey) {
-    return currentState.identity.hasOwnProperty(pubkey);
+    return window.spaceman.CurrentState.state.identity.hasOwnProperty(pubkey);
 }
 
 export function getReplayForAccount(account) {
-    return currentState.replay[account]
+    return window.spaceman.CurrentState.state.replay[account]
 }
 
 export function getIdentityByAccount(account) {
-    return currentState.identity[account]
+    return window.spaceman.CurrentState.state.identity[account]
 }
 
 

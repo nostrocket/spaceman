@@ -1,7 +1,7 @@
 import {makeTextInput} from "../helpers/forms.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
-import * as currentState from "../state/state.js";
-import {makeItem} from "../helpers/markdown.js";
+import {waitForStateReady} from "../state/state.js";
+import {makeH3, makeItem} from "../helpers/markdown.js";
 import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 
@@ -21,21 +21,29 @@ export function newMirv() {
 
     }
     div.appendChild(b)
-    if (currentState.shares) {
-        let  shares = Object.keys(currentState.shares);
-        shares.forEach(mirv => {
-            // console.log(currentState.identity[account])
-            // i.push(currentState.identity[account])
-            div.appendChild(makeNewMirv(mirv))
+    waitForStateReady(()=>{
+        Object.keys(window.spaceman.CurrentState.state.shares).forEach(s => {
+            div.append(makeNewMirv(s))
         })
-    }
+    })
+
+    // let s = shares()
+    // if (s) {
+    //     let  shares = Object.keys(s);
+    //     s.forEach(mirv => {
+    //         // console.log(currentState.identity[account])
+    //         // i.push(currentState.identity[account])
+    //         div.appendChild(makeNewMirv(mirv))
+    //     })
+    // }
     return div
 }
+
 function makeNewMirv(name){
     let s = document.createElement("div")
     s.className = "mirv"
     s.id = name
-    let mirvInfo = currentState.shares[name]
+    let mirvInfo = window.spaceman.CurrentState.state.shares[name]
     // console.log(mirvInfo)
     s.appendChild(makeH3(name))
 
