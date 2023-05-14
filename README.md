@@ -1,11 +1,12 @@
 # spaceman
 ### Get Start
-1. Install dependencies with `npm install`
+0. Install dependencies with `npm install`
 1. Run the server locally with `npm run dev`
+2. Before commit, run `npm run build` to make sure the static page can be successfullt built.
 ### Contributing
-0. Fork this github repository under your own github account.
-1. Clone _your_ fork locally on your development machine.
-2. Choose _one_ problem to solve. The problem you choose to solve should exists in Github Issue. If you aren't solving a problem that's already in the issue tracker you should describe the problem there (and your idea of the solution) first to see if anyone else has something to say about it (maybe someone is already working on a solution, or maybe you're doing something wrong).
+1. Fork this github repository under your own github account.
+2. Clone _your_ fork locally on your development machine.
+3. Choose _one_ problem to solve. The problem you choose to solve should exists in Github Issue. If you aren't solving a problem that's already in the issue tracker you should describe the problem there (and your idea of the solution) first to see if anyone else has something to say about it (maybe someone is already working on a solution, or maybe you're doing something wrong).
 
 **It is important to claim the issue you want to work on so that others don't work on the same thing. We are using Github currently until nostrocket is fully built.**
 
