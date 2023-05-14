@@ -19,4 +19,9 @@
 .reply_problem {
     display: block;
     alignment: right;
+    padding: 2px;
+}
+
+.link {
+    cursor: grab;
 }

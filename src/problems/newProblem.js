@@ -2,6 +2,7 @@ import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {publish} from "../helpers/events.js";
 import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
 import './problems.css'
+import {spacer} from "../helpers/markdown.js";
 
 const nip07signer = new NDKNip07Signer();
 let ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
@@ -23,7 +24,7 @@ export function problems() {
                 problemMap.set(ei.id, ei)
             }
         })
-        let prob = createProblemDiv(problemMap.get(window.spaceman.rootevents.ProblemRoot))
+        let prob = createProblemDivFromAnchor(problemMap.get(window.spaceman.rootevents.ProblemRoot))
         anc.appendChild(prob)
         div.appendChild(anc)
         problemMap.forEach(e => {
@@ -33,7 +34,7 @@ export function problems() {
                     console.log(28)
                     //todo if parent doesn't exist in the DOM check in the map for it and create it then proceed
                     let anchorNode = createAnchor(e.id)
-                    let problemContent = createProblemDiv(e)
+                    let problemContent = createProblemDivFromAnchor(e)
                     anchorNode.appendChild(problemContent)
                     document.getElementById(parentAnchor+"_children").append(anchorNode)
 
@@ -70,7 +71,7 @@ function getTagContent(event, tagName) {
     return parentID
 }
 
-function createProblemDiv(e) {
+function createProblemDivFromAnchor(e) {
     if (e) {
         let d = document.createElement("div")
         d.id = e.id+"_problem_box"
@@ -93,7 +94,7 @@ function createProblemDiv(e) {
         p.className = "problem"
         c.className = "children_box"
         //p.appendChild()
-        d.append(p, createReplyDiv(e), c)
+        d.append(p, createInteractionsBox(e), c)
         return d
     }
     return null
@@ -109,16 +110,83 @@ function createProblemContent(e) {
     return p
 }
 
-function createReplyDiv(e) {
+function createInteractionsBox(e) {
     let d = document.createElement("div")
     d.className = "reply_problem"
     d.id = "replybutton_"+e.id
-    d.appendChild(createButton("Log new problem", function () {
-        let p = createProblemDiv(e)
+    d.appendChild(createLink("Log new sub-problem", () => {
+        let p = createProblemDivFromAnchor(e)
         p.appendChild(newProblemForm(e.id))
         document.getElementById("problems").replaceChildren(p)
     }))
+    d.appendChild(spacer("|"))
+    d.appendChild(createLink("Read More", () => {
+        console.log(getCurrentProblemStateFromAnchorID(e.id))
+        document.getElementById("problems").replaceChildren(createProblemDetail(getCurrentProblemStateFromAnchorID(e.id)))
+    }))
     return d
+}
+
+function getCurrentProblemStateFromAnchorID(id) {
+    let events = []
+    problemMap.forEach((e) => {
+        if (e.kind === 641802) {
+            let anchor = getTagContent(e, "reply")
+            if (anchor === id) {
+                events.push(e)
+            }
+        }
+    })
+    let sorted = events.sort((a, b) => {
+        if (a.created_at < b.created_at) {
+            return -1
+        }
+        if (a.created_at > b.created_at) {
+            return 1
+        }
+        if (a.created_at === b.created_at) {
+            return 0
+        }
+    })
+    console.log("todo: verify that this sort order is correct")
+    let title = ""
+    let body = ""
+    sorted.forEach((e) => {
+        let t = getTagContent(e, "title")
+        if (t) {
+            title = t
+        }
+        if (e.content.length > 0) {
+            body = e.content
+        }
+    })
+    let fakeEvent = new NDKEvent(ndk);
+    fakeEvent.content = body
+    fakeEvent.tags = [["title", title]]
+    fakeEvent.id = id
+    return fakeEvent
+}
+
+function createProblemDetail(e) {
+    console.log(e)
+    problemMap.get()
+    let p = createProblemContent(e)
+    return p
+}
+
+function createLink(name, onclick, classname) {
+    let b = document.createElement("a")
+    if (name) {
+        b.innerText = name
+    }
+    if (onclick) {
+        b.onclick = onclick
+    }
+    b.className = "link"
+    if (classname) {
+        b.className = classname
+    }
+    return b
 }
 
 function createButton(name, onclick, classname) {
@@ -158,10 +226,10 @@ export function newProblemForm(parentAnchor, currentAnchor) {
                     parentAnchor = document.getElementById('title input').value;
                 }
                 if (parentAnchor && !currentAnchor) {
-                    let anchorEvent = createAnchorEvent(parentAnchor, document.getElementById('title input').value)
+                    let anchorEvent = makeAnchorEvent(parentAnchor, document.getElementById('title input').value)
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
-                        document.getElementById(parentAnchor).appendChild(createProblemDiv(anchorEvent))
+                        document.getElementById(parentAnchor).appendChild(createProblemDivFromAnchor(anchorEvent))
                         problemMap.set(anchorEvent.id, anchorEvent)
                         currentAnchor = anchorEvent.id
                         send641802(currentAnchor, document.getElementById('title input').value, document.getElementById('description input').value)
@@ -184,7 +252,7 @@ function send641802(currentAnchor, title, content) {
     let contentEvent = create641802(currentAnchor, title, content)
     contentEvent.publish().then(() => {
         console.log(contentEvent.rawEvent())
-        document.getElementById(currentAnchor).replaceChildren(createProblemDiv(problemMap.get(currentAnchor)))
+        document.getElementById(currentAnchor).replaceChildren(createProblemDivFromAnchor(problemMap.get(currentAnchor)))
     })
 }
 
@@ -200,7 +268,7 @@ function create641802(anchorID, title, content) {
     return ndkEvent
 }
 
-function createAnchorEvent(parentAnchor, content) {
+function makeAnchorEvent(parentAnchor, content) {
     let ndkEvent = new NDKEvent(ndk);
     ndkEvent.kind = 641800;
     ndkEvent.content = content

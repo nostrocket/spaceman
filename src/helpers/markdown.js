@@ -59,8 +59,11 @@ export function makeText(text) {
     return s
 }
 
-export function spacer() {
+export function spacer(deliminator) {
     let s = document.createElement("span")
     s.innerText = " "
+    if (deliminator) {
+        s.innerText = " " + deliminator + " ";
+    }
     return s
 }
