@@ -5,6 +5,7 @@ import './problems.css'
 import {spacer} from "../helpers/markdown.js";
 import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
 import {ndk,nip07signer} from "../../main.ts"
+import {addReplayProtection} from "../helpers/tags.js";
 
 // const nip07signer = new NDKNip07Signer();
 // let ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
@@ -31,7 +32,7 @@ export function problems() {
         div.appendChild(anc)
         problemEventMap.forEach(e => {
             if (e.kind === 641800) {
-                let parentAnchor = getTagContent(e, "reply")
+                let parentAnchor = getTagContent(e, "reply", "e")
                 if (document.getElementById(parentAnchor+"_children") && !document.getElementById(e.id+"_anchor")) {
                     //todo if parent doesn't exist in the DOM check in the map for it and create it then proceed
                     let anchorNode = createAnchor(e.id)
@@ -43,7 +44,7 @@ export function problems() {
         })
         problemEventMap.forEach(e => {
             if (e.kind === 641802) {
-                let anchor = getTagContent(e, "reply")
+                let anchor = getTagContent(e, "reply", "e")
                 if (document.getElementById(anchor+"_problem") && !document.getElementById(e.id)) {
                     let d = createProblemContent(e)//createProblemDiv(problemMap.get(anchor), e)
                     document.getElementById(anchor+"_problem").replaceWith(d)
@@ -58,16 +59,22 @@ export function problems() {
     return div
 }
 
-function getTagContent(event, tagName) {
-    let parentID = null
+function getTagContent(event, tagType, tagKey) {
+    let tagContent = null
     event.tags.forEach(tag => {
         tag.forEach(tagInner => {
-            if (tagInner === tagName) {
-                parentID = tag[1]
+            if (tagInner === tagType) {
+                if (tagKey) {
+                    if (tag[0] === tagKey) {
+                    tagContent = tag[1]
+                }}
+                if (!tagKey) {
+                    tagContent = tag[1]
+                }
             }
         })
     })
-    return parentID
+    return tagContent
 }
 
 function createProblemDivFromAnchor(e) {
@@ -103,7 +110,7 @@ function createProblemContent(e) {
     let p = document.createElement("div")
     p.id = e.id + "_problem"
         //p.id = contentEvent.id
-        p.innerHTML = "<h3>" + getTagContent(e, "title") + "</h3>"
+        p.innerHTML = "<h3>" + getTagContent(e, "title"   ) + "</h3>"
         p.innerHTML += "<p>" + e.content + "</p>"
         p.innerHTML += e.id
     return p
@@ -222,7 +229,7 @@ export function newProblemForm(parentAnchor, currentAnchor) {
             //create anchor event
             nip07signer.user().then(async (user) => {
                 if (!parentAnchor) {
-                    parentAnchor = document.getElementById('title input').value;
+                    parentAnchor = document.getElementById('parent input').value;
                 }
                 if (parentAnchor && !currentAnchor) {
                     let anchorEvent = makeAnchorEvent(parentAnchor, document.getElementById('title input').value)
@@ -264,6 +271,7 @@ function create641802(anchorID, title, content) {
         ["e", anchorID, "", "reply"],
         ["title", title]
     ]
+    ndkEvent.tags = addReplayProtection(ndkEvent.pubkey, ndkEvent.tags)
     return ndkEvent
 }
 
@@ -271,7 +279,12 @@ function makeAnchorEvent(parentAnchor, content) {
     let ndkEvent = new NDKEvent(ndk);
     ndkEvent.kind = 641800;
     ndkEvent.content = content
-    ndkEvent.tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
-        ["e", parentAnchor, "", "reply"]]
+    ndkEvent.tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"]]
+    if (parentAnchor) {
+        if (parentAnchor.length === 64) {
+            ndkEvent.tags.push(["e", parentAnchor, "", "reply"])
+        }
+    }
+    ndkEvent.tags = addReplayProtection("", ndkEvent.tags)
     return ndkEvent
 }

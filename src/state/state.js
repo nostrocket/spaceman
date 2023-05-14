@@ -47,7 +47,7 @@ export function pubkeyInIdentity(pubkey) {
     return currentState.identity.hasOwnProperty(pubkey);
 }
 
-export function getReplyByAccount(account) {
+export function getReplayForAccount(account) {
     return currentState.replay[account]
 }
 

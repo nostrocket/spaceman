@@ -26,7 +26,7 @@ window.spaceman.rootevents.SharesRoot = "7fd9810bdb8bc635633cc4e3d0888e395420aed
 window.spaceman.rootevents.MirvsRoot = "c7f87218e62f6d41fa2f5b2480210ed1d48b2609e03e9b4b500a3b64e3c08554"
 window.spaceman.rootevents.IgnitionEvent = "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c"
 window.spaceman.rootevents.ReplayRoot = "24c30ad7f036ed49379b5d1209836d1ff6795adb34da2d3e4cabc47dc9dfef21"
-window.spaceman.rootevents.ProblemRoot = "77c3bf5382b62d16a70df8e2932a512e2fce72458ee47b73feaef8ae8b9bd62b"
+window.spaceman.rootevents.ProblemRoot = "7227dabb075105b1af089d49f20896ce8809f386b9263aa78224e00b630c9622"
 
 
 
@@ -49,7 +49,12 @@ async function initializeNDK() {
 
 setTimeout(function(){
     if (window.nostr) {
-        initializeNDK().then(x=>{ndk=x}) 
+        initializeNDK().then(x=> {
+            ndk = x
+            nip07signer.user().then(y=>{
+                window.spaceman.pubkey = y.hexpubkey()
+            })
+        })
     } else {
         window.spaceman.pubkey = ""
         alert("You can look but you can't touch. Please install a NIP-07 nostr signing browser extension (such as GetAlby or Nos2x) if you want to interact with Nostrocket!")

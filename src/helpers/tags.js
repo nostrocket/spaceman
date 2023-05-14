@@ -1,14 +1,22 @@
-import {getReplyByAccount, pubkeyInIdentity} from "../state/state.js";
+import {getReplayForAccount, pubkeyInIdentity} from "../state/state.js";
 
 export function makeTags(pubkey, type, r){
-    let tags;
+    let tags = [];
     tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"]]
     if (type === "identity") {tags.push(["e", window.spaceman.rootevents.IdentityRoot, "", "reply"])}
     if (type === "shares") {tags.push(["e", window.spaceman.rootevents.SharesRoot, "", "reply"])}
     if (type === "mirvs") {tags.push(["e", window.spaceman.rootevents.MirvsRoot, "", "reply"])}
+    tags = addReplayProtection(pubkey, tags, r)
+    return tags
+}
+
+export function addReplayProtection(pubkey, tags, r) {
     if (!r) {
+        if (!pubkey) {
+            pubkey = window.spaceman.pubkey
+        }
         if (pubkeyInIdentity(pubkey)){
-            tags.push(["r", getReplyByAccount(pubkey), "", "reply"])
+            tags.push(["r", getReplayForAccount(pubkey), "", "reply"])
         } else {
             tags.push(["r", window.spaceman.rootevents.ReplayRoot, "", "reply"])
         }
