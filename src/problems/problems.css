@@ -26,5 +26,9 @@
 
 .problem_box {
     display: block;
-    margin: 2%;
+    border-color: rgba(250, 122, 11, 0.8);
+    border-width: thin;
+    border-left-style: solid;
+    border-top-style: solid;
+    padding: 1%;
 }

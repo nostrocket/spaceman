@@ -6,6 +6,7 @@ import viteLogo from '/vite.svg'
 import {newMirv} from "./src/mirvs/newMirv.js";
 import {updateAccountDetails} from "./src/identity/updateProfile.js";
 import {problems} from "./src/problems/newProblem.js";
+import {createProblemsFromState} from "./src/problems/problemsFromState.js"
 import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
 import { nip10 } from 'nostr-tools';
 
@@ -15,10 +16,14 @@ declare global {
 export {};
 
 window.spaceman = {}
+
+window.spaceman.Functions = {}
+window.spaceman.Functions.problemsFromState = createProblemsFromState
 window.spaceman.renderIdentity = renderIdentities
 window.spaceman.newMirv = newMirv
 window.spaceman.updateAccountDetails = updateAccountDetails
 window.spaceman.displayProblems = problems
+
 
 window.spaceman.rootevents = {}
 window.spaceman.rootevents.IdentityRoot = "0a73208becd0b1a9d294e6caef14352047ab44b848930e6979937fe09effaf71"

@@ -38,6 +38,21 @@ export function makeLink(url, text) {
     return a
 }
 
+export function makeLinkWithOnclick(name, onclick, classname) {
+    let b = document.createElement("a")
+    if (name) {
+        b.innerText = name
+    }
+    if (onclick) {
+        b.onclick = onclick
+    }
+    b.className = "link"
+    if (classname) {
+        b.className = classname
+    }
+    return b
+}
+
 export function makeH3(title) {
     let h3 = document.createElement("h3")
     h3.className = "is-3"
