@@ -4,10 +4,11 @@ import {publish} from "../helpers/events.js";
 import './problems.css'
 import {spacer} from "../helpers/markdown.js";
 import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
+import {ndk,nip07signer} from "../../main.ts"
 
-const nip07signer = new NDKNip07Signer();
-let ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
-await ndk.connect();
+// const nip07signer = new NDKNip07Signer();
+// let ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
+// await ndk.connect();
 
 const problemEventMap = new Map();
 
