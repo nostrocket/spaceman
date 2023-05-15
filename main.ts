@@ -1,3 +1,4 @@
+import "@fontsource/ubuntu"
 import './style.css'
 import renderIdentities from './src/identity/identity.js'
 
