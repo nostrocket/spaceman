@@ -80,3 +80,29 @@ setTimeout(function(){
 //         alert("You can look but you can't touch. Please install a NIP-07 nostr signing browser extension (such as GetAlby or Nos2x) if you want to interact with Nostrocket!")
 //     }
 // },100)
+
+window.spaceman.Functions.fetchevent = (id) => {
+    let filter = ""
+    if (id) {
+        filter = {ids: [[id]]}
+    } else {
+        filter = {"#e": "3fd2242a22d2c84c02196013ffa62c37ef7edeea421ba09e79c199b8d3a9fd55"}
+        // {ids: [[window.spaceman.rootevents.ProblemRoot]]}
+        //{kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
+    }
+
+    let ndk_read = null
+    if (ndk === null){
+        ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
+        ndk_read.connect();
+
+    } else {
+        ndk_read = ndk;
+    }
+    ndk_read.fetchEvents(filter).then(e => {
+        e.forEach(ei => {
+            console.log(ei)
+        }
+        )
+    })
+}
