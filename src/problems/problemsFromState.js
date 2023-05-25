@@ -87,7 +87,7 @@ function createProblemDivFromAnchor(problem, preview) {
         } else {
             p.innerHTML += "<div class='id'>"+problem.UID+"</div>"
             let edit = makeLinkWithOnclick("edit", ()=>{
-                console.log("todo: implement editing")
+                d.appendChild(newProblemForm(problem.Parent, problem.UID))
             })
             let claim = makeLinkWithOnclick("claim", ()=>{
                 console.log("todo: implement claim")
@@ -112,45 +112,70 @@ function createProblemDivFromAnchor(problem, preview) {
 
 function newProblemForm(parentAnchor, currentAnchor) {
     let div = document.createElement("div")
-    div.appendChild(makeTextInput("Title", "Problem: summarize the problem you face or have observed in less than 100 characters", "title input", 100, ""))
-    if (!parentAnchor) {
+    let existingProblemTitle = "";
+    let existingProblemBody = "";
+    if (currentAnchor) {
+        let currentProblem = window.spaceman.CurrentState.state.problems[currentAnchor]
+        if (currentProblem) {
+            console.log(currentProblem)
+            existingProblemTitle = currentProblem.Title
+            existingProblemBody = currentProblem.Body
+        }
+    }
+    div.appendChild(makeTextInput("Title", "Problem: summarize the problem you face or have observed in less than 100 characters", "title input", 100, existingProblemTitle))
+    if (!parentAnchor && !currentAnchor) {
         div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
     }
-    div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, ""))
+    div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, existingProblemBody))
     div.appendChild(createButton("Publish!",
         function () {
             //create anchor event
             nip07signer.user().then(async (user) => {
                 if (!parentAnchor) {
-                    parentAnchor = document.getElementById('parent input').value;
+                    let userAnchorInput = document.getElementById('parent input').value
+                    if (userAnchorInput) {
+                        if (userAnchorInput.length === 64) {
+                            parentAnchor = document.getElementById('parent input').value;
+                        }
+                    }
                 }
-                if (parentAnchor && !currentAnchor) {
                     let body = document.getElementById('description input').value
                     let title = document.getElementById('title input').value
+                if (!currentAnchor) {
                     let anchorEvent = makeAnchorEvent(parentAnchor, title)
                     anchorEvent.tags = addReplayProtection(user.hexpubkey(), anchorEvent.tags)
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
                         window.spaceman.CurrentState.state.replay[user.hexpubkey()] = anchorEvent.id
                         console.log(anchorEvent.id)
-                        let contentEvent = create641802(anchorEvent.id, title, body)
-                        contentEvent.tags = addReplayProtection(user.hexpubkey(), contentEvent.tags)
-                        contentEvent.publish()
-                        window.spaceman.CurrentState.state.problems[anchorEvent.id] = {}
-                        window.spaceman.CurrentState.state.problems[anchorEvent.id].UID = anchorEvent.id
-                        window.spaceman.CurrentState.state.problems[anchorEvent.id].Body = body
-                        window.spaceman.CurrentState.state.problems[anchorEvent.id].Title = title
-                        document.getElementById(parentAnchor+"_children").appendChild(createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[anchorEvent.id]))
+                        publish641802(user.hexpubkey(), anchorEvent.id, title, body, parentAnchor)
                         div.style.display = "none"
                     })
-                } else {
-
+                }
+                if (currentAnchor) {
+                    publish641802(user.hexpubkey(), currentAnchor, title, body, null)
+                    div.style.display = "none"
                 }
             });
         },
         "publish"
     ))
     return div
+}
+
+function publish641802(pubkey, anchorID, title, body, parentAnchor) {
+    let contentEvent = create641802(anchorID, title, body)
+    contentEvent.tags = addReplayProtection(pubkey, contentEvent.tags)
+    contentEvent.publish()
+    console.log(contentEvent)
+    window.spaceman.CurrentState.state.problems[anchorID] = {}
+    window.spaceman.CurrentState.state.problems[anchorID].UID = anchorID
+    window.spaceman.CurrentState.state.problems[anchorID].Body = body
+    window.spaceman.CurrentState.state.problems[anchorID].Title = title
+    if (parentAnchor) {
+        document.getElementById(parentAnchor+"_children").appendChild(createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[anchorID]))
+    }
+
 }
 
 function create641802(anchorID, title, content) {
