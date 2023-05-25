@@ -280,7 +280,8 @@ function create641802(anchorID, title, content) {
         ["e", anchorID, "", "reply"],
         ["title", title]
     ]
-    ndkEvent.tags = addReplayProtection(ndkEvent.pubkey, ndkEvent.tags)
+    //ndkEvent.tags = addReplayProtection(ndkEvent.pubkey, ndkEvent.tags)
+    console.log(ndkEvent)
     return ndkEvent
 }
 
