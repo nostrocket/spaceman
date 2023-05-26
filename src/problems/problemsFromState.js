@@ -69,6 +69,9 @@ function createProblemDivFromAnchor(problem, preview) {
         p.id = problem.UID + "_problem"
         p.innerHTML = "<h3>" + problem.Title + "</h3>"
         p.innerHTML += "<p>" + problem.Body + "</p>"
+        if (window.spaceman.CurrentState.state.identity[problem.CreatedBy]) {
+            p.innerHTML += "<p>Logged By: " + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "</p>"
+        }
         let c = document.createElement("div")
         c.id = problem.UID + "_children"
         p.className = "problem"
