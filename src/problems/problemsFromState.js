@@ -86,6 +86,9 @@ function createProblemDivFromAnchor(problem, preview) {
 
             //EDIT
             let edit = makeLinkWithOnclick("edit", ()=>{
+                if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "maintainer") && (window.spaceman.pubkey !== problem.CreatedBy)) {
+                    alert("You must be the problem's author or a project maintainer to edit this problem")
+                }
                 if (!document.getElementById(problem.UID + "_edit")) {
                     let div = document.createElement("div")
                     div.className = "problem_form"
@@ -114,6 +117,9 @@ function createProblemDivFromAnchor(problem, preview) {
 
             //CREATE SUB-PROBLEM
             let newProblem = makeLinkWithOnclick("create sub-problem", ()=>{
+                if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
+                    alert("Hello there, you filthy pleb. We have standards here! You must be in the identity tree to log new problems.")
+                }
                 if (!document.getElementById(problem.UID + "_create_sub_problem")) {
                     let div = document.createElement("div")
                     div.className = "problem_form"
