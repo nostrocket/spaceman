@@ -10,6 +10,7 @@ import {problems} from "./src/problems/newProblem.js";
 import {createProblemsFromState} from "./src/problems/problemsFromState.js"
 import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
 import { nip10 } from 'nostr-tools';
+import {generateKeyPair} from "crypto";
 
 declare global {
     interface Window { spaceman: any; }
@@ -105,4 +106,30 @@ window.spaceman.Functions.fetchevent = (id) => {
         }
         )
     })
+}
+
+window.spaceman.Functions.isValidated = (pubkey: string, type: string) :boolean => {
+    if (window.spaceman.CurrentState.state && pubkey && type) {
+        if (window.spaceman.CurrentState.state.identity) {
+            if (window.spaceman.CurrentState.state.identity[pubkey]) {
+                switch (type) {
+                    case "ush":
+                        if (window.spaceman.CurrentState.state.identity[pubkey].UniqueSovereignBy) {
+                            if (window.spaceman.CurrentState.state.identity[pubkey].UniqueSovereignBy.length > 0) {
+                                return true
+                            }
+                        }
+                        break;
+                    case "maintainer":
+                        if (window.spaceman.CurrentState.state.identity[pubkey].MaintainerBy) {
+                            if (window.spaceman.CurrentState.state.identity[pubkey].MaintainerBy.length > 0) {
+                                return true
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+    return false
 }
