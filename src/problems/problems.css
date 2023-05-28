@@ -36,3 +36,12 @@
 .id {
     font-size: x-small;
 }
+
+.problem_form {
+    display: block;
+    border-color: rgba(250, 122, 11, 0.8);
+    border-width: thick;
+    border-style: solid;
+    padding: 2%;
+    margin-bottom: 1%;
+}

@@ -46,12 +46,6 @@ function recursiveRender(problem) {
         }
 }
 
-function getChainOfProblems(problemList) {
-    let chain = []
-    chain.push(problem)
-    window.spaceman.CurrentState.state.problems[problem].Parent
-}
-
 function createProblemPreview(problemID) {
     return createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[problemID], true)
 }
@@ -89,20 +83,48 @@ function createProblemDivFromAnchor(problem, preview) {
             actionBox.appendChild(readMore)
         } else {
             p.innerHTML += "<div class='id'>"+problem.UID+"</div>"
+
+            //EDIT
             let edit = makeLinkWithOnclick("edit", ()=>{
-                d.appendChild(newProblemForm(problem.Parent, problem.UID))
+                if (!document.getElementById(problem.UID + "_edit")) {
+                    let div = document.createElement("div")
+                    div.className = "problem_form"
+                    div.innerText = "EDIT THIS PROBLEM"
+                    let form = makeProblemForm(problem.Parent, problem.UID)
+                    form.id = problem.UID + "_edit"
+                    div.appendChild(form)
+                    d.appendChild(div)
+                }
             })
+
+            //CLAIM
             let claim = makeLinkWithOnclick("claim", ()=>{
                 console.log("todo: implement claim")
             })
+
+            //CLOSE
             let close = makeLinkWithOnclick("close", ()=>{
                 console.log("todo: implement close")
             })
+
+            //COMMENT
             let comment = makeLinkWithOnclick("comment", ()=>{
                 console.log("todo: implement comment")
             })
+
+            //CREATE SUB-PROBLEM
             let newProblem = makeLinkWithOnclick("create sub-problem", ()=>{
-                d.appendChild(newProblemForm(problem.UID))
+                if (!document.getElementById(problem.UID + "_create_sub_problem")) {
+                    let div = document.createElement("div")
+                    div.className = "problem_form"
+                    div.innerText = "CREATE A NEW PROBLEM NESTED UNDER THIS ONE"
+                    let form = makeProblemForm(problem.UID)
+                    form.id = problem.UID + "_create_sub_problem"
+                    div.appendChild(form)
+                    d.appendChild(div)
+                } else {
+                    console.log("form appears to exist in DOM already")
+                }
             })
             actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem)
         }
@@ -113,14 +135,13 @@ function createProblemDivFromAnchor(problem, preview) {
 }
 
 
-function newProblemForm(parentAnchor, currentAnchor) {
+function makeProblemForm(parentAnchor, currentAnchor) {
     let div = document.createElement("div")
     let existingProblemTitle = "";
     let existingProblemBody = "";
     if (currentAnchor) {
         let currentProblem = window.spaceman.CurrentState.state.problems[currentAnchor]
         if (currentProblem) {
-            console.log(currentProblem)
             existingProblemTitle = currentProblem.Title
             existingProblemBody = currentProblem.Body
         }
