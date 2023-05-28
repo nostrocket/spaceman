@@ -26,6 +26,14 @@ sub.on('event', event => {
     state.enMapState(event)
     document.getElementById("content").replaceChildren()
     document.getElementById("content").appendChild(renderIdentityLayout())
+    if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey]) {
+        if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name) {
+            if (document.getElementById("pubkey")) {
+                document.getElementById("pubkey").innerText = window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name
+            }
+        }
+
+    }
 })
 
 export async function signAsynchronously(event) {

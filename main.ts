@@ -63,6 +63,9 @@ setTimeout(function(){
             ndk = x
             nip07signer.user().then(y=>{
                 window.spaceman.pubkey = y.hexpubkey()
+                if (document.getElementById("pubkey")) {
+                    document.getElementById("pubkey").innerText = y.npub.substring(0, 12)
+                }
             })
         })
     } else {
