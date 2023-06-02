@@ -66,6 +66,9 @@ function createProblemDivFromAnchor(problem, preview) {
         if (window.spaceman.CurrentState.state.identity[problem.CreatedBy]) {
             p.innerHTML += "<p>Logged By: " + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "</p>"
         }
+        if (window.spaceman.CurrentState.state.identity[problem.ClaimedBy]) {
+            p.innerHTML += "<p>Currently being worked on by: " + window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name + "</p>"
+        }
         let c = document.createElement("div")
         c.id = problem.UID + "_children"
         p.className = "problem"
@@ -85,7 +88,7 @@ function createProblemDivFromAnchor(problem, preview) {
             p.innerHTML += "<div class='id'>"+problem.UID+"</div>"
 
             //EDIT
-            let edit = makeLinkWithOnclick("edit", ()=>{
+            actionBox.appendChild(makeLinkWithOnclick("edit", ()=>{
                 if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "maintainer") && (window.spaceman.pubkey !== problem.CreatedBy)) {
                     alert("You must be the problem's author or a project maintainer to edit this problem")
                 }
@@ -98,40 +101,50 @@ function createProblemDivFromAnchor(problem, preview) {
                     div.appendChild(form)
                     d.appendChild(div)
                 }
-            })
+            }))
+            actionBox.appendChild(spacer("|"))
 
             //CLAIM
-            let claim = makeLinkWithOnclick("claim", ()=>{
-                if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
-                    alert("You must be in the identity tree to claim a problem")
-                } else {
-                    if (!problem.Closed && problem.ClaimedBy === "") {
-                        for (let val in window.spaceman.CurrentState.state.problems) {
-                            if (window.spaceman.CurrentState.state.problems[val].Parent === problem.UID && !window.spaceman.CurrentState.state.problems[val].Closed) {
-                                alert("this problem has open children, it cannot be claimed")
-                                return
+            if (problem.ClaimedBy === "") {
+                actionBox.appendChild(makeLinkWithOnclick("claim", ()=>{
+                    if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
+                        alert("You must be in the identity tree to claim a problem")
+                    } else {
+                        if (!problem.Closed && problem.ClaimedBy === "") {
+                            for (let val in window.spaceman.CurrentState.state.problems) {
+                                if (window.spaceman.CurrentState.state.problems[val].Parent === problem.UID && !window.spaceman.CurrentState.state.problems[val].Closed) {
+                                    alert("this problem has open children, it cannot be claimed")
+                                    return
+                                }
                             }
+                            let e = create641804(problem.UID, "claim")
+                            e.tags = addReplayProtection("", e.tags)
+                            e.publish()
+                            console.log(e)
                         }
-                        let e = create641804(problem.UID, "claim")
-                        e.tags = addReplayProtection("", e.tags)
-                        e.publish()
-                        console.log(e)
                     }
-                }
-            })
+                }))
+                actionBox.appendChild(spacer("|"))
+            }
 
             //CLOSE
-            let close = makeLinkWithOnclick("close", ()=>{
-                console.log("todo: implement close")
-            })
+            if (!problem.Closed) {
+                actionBox.appendChild(
+                    makeLinkWithOnclick("close", ()=>{
+                        console.log("todo: implement close")
+                    })
+                )
+                actionBox.appendChild(spacer("|"))
+            }
 
             //COMMENT
-            let comment = makeLinkWithOnclick("comment", ()=>{
+            actionBox.appendChild(makeLinkWithOnclick("comment", ()=>{
                 console.log("todo: implement comment")
-            })
+            }))
+            actionBox.appendChild(spacer("|"))
 
             //CREATE SUB-PROBLEM
-            let newProblem = makeLinkWithOnclick("create sub-problem", ()=>{
+            actionBox.appendChild(makeLinkWithOnclick("create sub-problem", ()=>{
                 if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
                     alert("Hello there, you filthy pleb. We have standards here! You must be in the identity tree to log new problems.")
                 }
@@ -146,13 +159,14 @@ function createProblemDivFromAnchor(problem, preview) {
                 } else {
                     console.log("form appears to exist in DOM already")
                 }
-            })
+            }))
+            actionBox.appendChild(spacer("|"))
 
             //PRINT TO CONSOLE
-            let printToConsole = makeLinkWithOnclick("print", ()=>{
+            actionBox.appendChild(makeLinkWithOnclick("print", ()=>{
                 console.log(problem)
-            })
-            actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem, spacer("|"), printToConsole)
+            }))
+            //actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem, spacer("|"), printToConsole)
         }
         d.append(p, actionBox, c)
         return d
