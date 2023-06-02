@@ -102,7 +102,16 @@ function createProblemDivFromAnchor(problem, preview) {
 
             //CLAIM
             let claim = makeLinkWithOnclick("claim", ()=>{
-                console.log("todo: implement claim")
+                if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
+                    alert("You must be in the identity tree to claim a problem")
+                } else {
+                    if (!problem.Closed && problem.ClaimedBy === "") {
+                        let e = create641804(problem.UID, "claim")
+                        e.tags = addReplayProtection("", e.tags)
+                        e.publish()
+                        console.log(e)
+                    }
+                }
             })
 
             //CLOSE
@@ -132,7 +141,12 @@ function createProblemDivFromAnchor(problem, preview) {
                     console.log("form appears to exist in DOM already")
                 }
             })
-            actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem)
+
+            //PRINT TO CONSOLE
+            let printToConsole = makeLinkWithOnclick("print", ()=>{
+                console.log(problem)
+            })
+            actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem, spacer("|"), printToConsole)
         }
         d.append(p, actionBox, c)
         return d
@@ -172,7 +186,7 @@ function makeProblemForm(parentAnchor, currentAnchor) {
                     let body = document.getElementById('description input').value
                     let title = document.getElementById('title input').value
                 if (!currentAnchor) {
-                    let anchorEvent = makeAnchorEvent(parentAnchor, title)
+                    let anchorEvent = makeAncxxhorEvent(parentAnchor, title)
                     anchorEvent.tags = addReplayProtection(user.hexpubkey(), anchorEvent.tags)
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
@@ -206,6 +220,31 @@ function publish641802(pubkey, anchorID, title, body, parentAnchor) {
         document.getElementById(parentAnchor+"_children").appendChild(createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[anchorID]))
     }
 
+}
+
+function create641804(problemID, operation) {
+    let ndkEvent = new NDKEvent(ndk);
+    ndkEvent.kind = 641804
+    ndkEvent.content = operation
+    ndkEvent.tags = [
+        ["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
+        ["e", problemID, "", "reply"]
+    ]
+    switch (operation) {
+        case "claim":
+            ndkEvent.tags.push(["claim", "claim"])
+            break;
+        case "abandon":
+            ndkEvent.tags.push(["claim", "abandon"])
+            break;
+        case "close":
+            ndkEvent.tags.push(["close", "close"])
+            break;
+        case "open":
+            ndkEvent.tags.push(["close", "open"])
+            break;
+    }
+    return ndkEvent
 }
 
 function create641802(anchorID, title, content) {
