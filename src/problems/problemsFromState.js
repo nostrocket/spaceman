@@ -106,6 +106,12 @@ function createProblemDivFromAnchor(problem, preview) {
                     alert("You must be in the identity tree to claim a problem")
                 } else {
                     if (!problem.Closed && problem.ClaimedBy === "") {
+                        for (let val in window.spaceman.CurrentState.state.problems) {
+                            if (window.spaceman.CurrentState.state.problems[val].Parent === problem.UID && !window.spaceman.CurrentState.state.problems[val].Closed) {
+                                alert("this problem has open children, it cannot be claimed")
+                                return
+                            }
+                        }
                         let e = create641804(problem.UID, "claim")
                         e.tags = addReplayProtection("", e.tags)
                         e.publish()
