@@ -124,12 +124,10 @@ function createProblemDivFromAnchor(problem, preview) {
                         alert("You must be in the identity tree to claim a problem")
                     } else {
                         if (!problem.Closed && problem.ClaimedBy === "") {
-                            for (let val in window.spaceman.CurrentState.state.problems) {
-                                if (window.spaceman.CurrentState.state.problems[val].Parent === problem.UID && !window.spaceman.CurrentState.state.problems[val].Closed) {
+                                if (hasOpenChildren(problem.UID)) {
                                     alert("this problem has open children, it cannot be claimed")
                                     return
                                 }
-                            }
                             let e = create641804(problem.UID, "claim")
                             e.tags = addReplayProtection("", e.tags)
                             e.publish()
@@ -147,7 +145,7 @@ function createProblemDivFromAnchor(problem, preview) {
                 && problem.ClaimedBy !== window.spaceman.pubkey
             ) {
                 actionBox.append(makeLinkWithOnclick("force unclaim", ()=>{
-                    abandonClaim(problem.UID)
+                    sendMetadataUpdate(problem.UID, "abandon")
                 }), spacer("|"))
             }
 
@@ -155,7 +153,7 @@ function createProblemDivFromAnchor(problem, preview) {
             //ABANDON
             if (problem.ClaimedBy === window.spaceman.pubkey) {
                 actionBox.appendChild(makeLinkWithOnclick("abandon", ()=>{
-                    abandonClaim(problem.UID)
+                    sendMetadataUpdate(problem.UID, "abandon")
                 }))
                 actionBox.appendChild(spacer("|"))
             }
@@ -164,7 +162,21 @@ function createProblemDivFromAnchor(problem, preview) {
             if (!problem.Closed) {
                 actionBox.appendChild(
                     makeLinkWithOnclick("close", ()=>{
-                        console.log("todo: implement close")
+                        if (hasOpenChildren(problem.UID)) {
+                            alert("this problem has open children, it cannot be closed")
+                            return
+                        }
+                        sendMetadataUpdate(problem.UID, "close")
+                    })
+                )
+                actionBox.appendChild(spacer("|"))
+            }
+
+            //OPEN
+            if (problem.Closed) {
+                actionBox.appendChild(
+                    makeLinkWithOnclick("re-open", ()=>{
+                        sendMetadataUpdate(problem.UID, "open")
                     })
                 )
                 actionBox.appendChild(spacer("|"))
@@ -207,8 +219,28 @@ function createProblemDivFromAnchor(problem, preview) {
     return null
 }
 
-function abandonClaim(UID) {
-    let e = create641804(UID, "abandon")
+function hasOpenChildren(UID) {
+    for (let val in window.spaceman.CurrentState.state.problems) {
+        if (window.spaceman.CurrentState.state.problems[val].Parent === UID && !window.spaceman.CurrentState.state.problems[val].Closed) {
+            return true
+        }
+    }
+    return false
+}
+
+function sendMetadataUpdate(UID, operation) {
+    let e;
+    switch (operation) {
+        case "abandon":
+            e = create641804(UID, "abandon")
+            break;
+        case "close":
+            e = create641804(UID, "close")
+            break;
+        case "open":
+            e = create641804(UID, "open")
+            break;
+    }
     e.tags = addReplayProtection("", e.tags)
     e.publish()
     console.log(e)
