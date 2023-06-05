@@ -166,6 +166,13 @@ function createProblemDivFromAnchor(problem, preview) {
                             alert("this problem has open children, it cannot be closed")
                             return
                         }
+                        if (
+                            problem.CreatedBy !== window.spaceman.pubkey
+                            && !window.spaceman.Functions.isValidated(window.spaceman.pubkey, "maintainer")
+                        ) {
+                            alert("you must be the problem's creator or a maintainer to close it")
+                            return
+                        }
                         sendMetadataUpdate(problem.UID, "close")
                     })
                 )
