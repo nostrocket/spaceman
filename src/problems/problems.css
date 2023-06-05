@@ -45,3 +45,25 @@
     padding: 2%;
     margin-bottom: 1%;
 }
+
+.closed {
+    display: block;
+    border-color: #363636;
+    background-color: rgb(26, 26, 26);
+    border-width: medium;
+    color: #494949;
+}
+
+.claimed {
+    display: block;
+    border-color: rgb(247, 0, 255);
+    border-width: medium;
+    background-color: rgb(68, 30, 133);
+}
+
+.available {
+    display: block;
+    border-width: medium;
+    border-color: #047c00;
+    background-color: rgb(5, 42, 3);
+}

@@ -58,6 +58,19 @@ function createProblemDivFromAnchor(problem, preview) {
         let d = document.createElement("div")
         d.id = problem.UID+"_problem_box"
         d.className = "problem_box"
+        if (problem.Closed) {
+            d.className += " closed"
+        }
+        if (problem.ClaimedBy) {
+            d.className += " claimed"
+        }
+        if (
+            !hasOpenChildren(problem.UID)
+            && !problem.ClaimedBy
+            && !problem.Closed
+        ) {
+            d.className += " available"
+        }
         let p = document.createElement("div")
         p.id = problem.UID + "_problem"
         p.innerHTML = "<h3>" + problem.Title + "</h3>"
@@ -118,7 +131,7 @@ function createProblemDivFromAnchor(problem, preview) {
             actionBox.appendChild(spacer("|"))
 
             //CLAIM
-            if (problem.ClaimedBy === "") {
+            if (problem.ClaimedBy === "" && !problem.Closed) {
                 actionBox.appendChild(makeLinkWithOnclick("claim", ()=>{
                     if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
                         alert("You must be in the identity tree to claim a problem")
@@ -196,23 +209,25 @@ function createProblemDivFromAnchor(problem, preview) {
             actionBox.appendChild(spacer("|"))
 
             //CREATE SUB-PROBLEM
-            actionBox.appendChild(makeLinkWithOnclick("create sub-problem", ()=>{
-                if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
-                    alert("Hello there, you filthy pleb. We have standards here! You must be in the identity tree to log new problems.")
-                }
-                if (!document.getElementById(problem.UID + "_create_sub_problem")) {
-                    let div = document.createElement("div")
-                    div.className = "problem_form"
-                    div.innerText = "CREATE A NEW PROBLEM NESTED UNDER THIS ONE"
-                    let form = makeProblemForm(problem.UID)
-                    form.id = problem.UID + "_create_sub_problem"
-                    div.appendChild(form)
-                    d.appendChild(div)
-                } else {
-                    console.log("form appears to exist in DOM already")
-                }
-            }))
-            actionBox.appendChild(spacer("|"))
+            if (!problem.Closed && !problem.ClaimedBy) {
+                actionBox.appendChild(makeLinkWithOnclick("create sub-problem", ()=>{
+                    if (!window.spaceman.Functions.isValidated(window.spaceman.pubkey, "ush")) {
+                        alert("Hello there, you filthy pleb. We have standards here! You must be in the identity tree to log new problems.")
+                    }
+                    if (!document.getElementById(problem.UID + "_create_sub_problem")) {
+                        let div = document.createElement("div")
+                        div.className = "problem_form"
+                        div.innerText = "CREATE A NEW PROBLEM NESTED UNDER THIS ONE"
+                        let form = makeProblemForm(problem.UID)
+                        form.id = problem.UID + "_create_sub_problem"
+                        div.appendChild(form)
+                        d.appendChild(div)
+                    } else {
+                        console.log("form appears to exist in DOM already")
+                    }
+                }))
+                actionBox.appendChild(spacer("|"))
+            }
 
             //PRINT TO CONSOLE
             actionBox.appendChild(makeLinkWithOnclick("print", ()=>{
