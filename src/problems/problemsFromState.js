@@ -1,6 +1,6 @@
 import {waitForStateReady} from "../state/state.js";
 import './problems.css'
-import {createButton, makeLinkWithOnclick, spacer} from "../helpers/markdown.js";
+import {createButton, makeItem, makeLinkWithOnclick, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
@@ -35,7 +35,6 @@ function recursiveRender(problem) {
                 return
             }
             if (parentNode && !thisNode) {
-                console.log("rendering " + problem)
                 parentNode.appendChild(createProblemPreview(problem))
                 return true
             }
@@ -67,7 +66,21 @@ function createProblemDivFromAnchor(problem, preview) {
             p.innerHTML += "<p>Logged By: " + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "</p>"
         }
         if (window.spaceman.CurrentState.state.identity[problem.ClaimedBy]) {
-            p.innerHTML += "<p>Currently being worked on by: " + window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name + "</p>"
+            // let depose = makeLinkWithOnclick("force remove", ()=>{
+            //     console.log(70)
+            //     let e = create641804(problem.UID, "abandon")
+            //     e.tags = addReplayProtection("", e.tags)
+            //     e.publish()
+            //     console.log(e)
+            // })
+            // console.log(depose)
+            //let claim = document.createElement("p")
+            let claim = makeItem("Currently being worked on by", window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name)
+            // if (problem.ClaimedBy !== window.spaceman.pubkey && !preview) {
+            //     claim.append(spacer(), depose)
+            // }
+            //p.innerHTML += "<b>Currently being worked on by: </b>" + window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name + "</b>"
+            p.appendChild(claim)
         }
         let c = document.createElement("div")
         c.id = problem.UID + "_children"
@@ -127,6 +140,26 @@ function createProblemDivFromAnchor(problem, preview) {
                 actionBox.appendChild(spacer("|"))
             }
 
+            //DEPOSE
+            if (
+                problem.ClaimedBy
+                && window.spaceman.Functions.isValidated(window.spaceman.pubkey, "maintainer")
+                && problem.ClaimedBy !== window.spaceman.pubkey
+            ) {
+                actionBox.append(makeLinkWithOnclick("force unclaim", ()=>{
+                    abandonClaim(problem.UID)
+                }), spacer("|"))
+            }
+
+
+            //ABANDON
+            if (problem.ClaimedBy === window.spaceman.pubkey) {
+                actionBox.appendChild(makeLinkWithOnclick("abandon", ()=>{
+                    abandonClaim(problem.UID)
+                }))
+                actionBox.appendChild(spacer("|"))
+            }
+
             //CLOSE
             if (!problem.Closed) {
                 actionBox.appendChild(
@@ -174,6 +207,12 @@ function createProblemDivFromAnchor(problem, preview) {
     return null
 }
 
+function abandonClaim(UID) {
+    let e = create641804(UID, "abandon")
+    e.tags = addReplayProtection("", e.tags)
+    e.publish()
+    console.log(e)
+}
 
 function makeProblemForm(parentAnchor, currentAnchor) {
     let div = document.createElement("div")
