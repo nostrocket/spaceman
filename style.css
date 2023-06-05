@@ -122,7 +122,4 @@ button:focus-visible {
   color: rgb(200, 0, 255);
   padding-left: 3px;
   padding-right: 3px;
-  border-style: solid;
-  border-width: medium;
-  border-color: #fa7a0b;
 }

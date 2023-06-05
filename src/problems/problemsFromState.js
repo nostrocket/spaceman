@@ -61,7 +61,7 @@ function createProblemDivFromAnchor(problem, preview) {
         if (problem.Closed) {
             d.className += " closed"
         }
-        if (problem.ClaimedBy) {
+        if (problem.ClaimedBy && !problem.Closed) {
             d.className += " claimed"
         }
         if (
@@ -299,7 +299,7 @@ function makeProblemForm(parentAnchor, currentAnchor) {
                     let body = document.getElementById('description input').value
                     let title = document.getElementById('title input').value
                 if (!currentAnchor) {
-                    let anchorEvent = makeAncxxhorEvent(parentAnchor, title)
+                    let anchorEvent = makeAnchorEvent(parentAnchor, title)
                     anchorEvent.tags = addReplayProtection(user.hexpubkey(), anchorEvent.tags)
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
