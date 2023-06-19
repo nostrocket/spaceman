@@ -67,3 +67,11 @@
     border-color: #047c00;
     background-color: rgb(5, 42, 3);
 }
+
+.comment {
+    display: block;
+    border-width: medium;
+    border-color: #fa7a0b;
+    background-color: rgb(24, 41, 65);
+    margin-bottom: 2%;
+}

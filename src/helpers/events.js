@@ -1,6 +1,7 @@
 import * as NostrTools from "nostr-tools";
 import * as state from "../state/state.js";
 import renderIdentityLayout from "../identity/identity.js";
+import {enmapReply} from "../problems/events.js";
 
 const pool = new NostrTools.SimplePool()
 let relays = []
@@ -10,8 +11,8 @@ let sub = pool.sub(
     [
         {
             //tags: [['#e', 'fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c']]
-            "#e": "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c",
-            kinds: [10310]
+            "#e": "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c"
+            //kinds: [10310]
             // authors: [
             //     "b4f36e2a63792324a92f3b7d973fcc33eaa7720aaeee71729ac74d7ba7677675"
             //     //NostrTools.nip19.decode("npub1mygerccwqpzyh9pvp6pv44rskv40zutkfs38t0hqhkvnwlhagp6s3psn5p").data
@@ -21,19 +22,26 @@ let sub = pool.sub(
 )
 
 sub.on('event', event => {
-    let j = JSON.parse(event.content)
-    console.log(j)
-    state.enMapState(event)
-    document.getElementById("content").replaceChildren()
-    document.getElementById("content").appendChild(renderIdentityLayout())
-    if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey]) {
-        if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name) {
-            if (document.getElementById("pubkey")) {
-                document.getElementById("pubkey").innerText = window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name
+    if (event.kind === 641804) {
+        enmapReply(event)
+    }
+        if (event.kind === 10310) {
+            let j = JSON.parse(event.content)
+            console.log(j)
+            state.enMapState(event)
+            document.getElementById("content").replaceChildren()
+            document.getElementById("content").appendChild(renderIdentityLayout())
+            if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey]) {
+                if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name) {
+                    if (document.getElementById("pubkey")) {
+                        document.getElementById("pubkey").innerText = window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name
+                    }
+                }
+
             }
         }
 
-    }
+
 })
 
 export async function signAsynchronously(event) {

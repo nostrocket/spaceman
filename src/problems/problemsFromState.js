@@ -5,14 +5,15 @@ import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {addReplayProtection} from "../helpers/tags.js";
+import {createElementAllComments} from "./comments.js";
 
 export function createProblemsFromState() {
     let div = document.createElement("div")
     div.id = "problems"
-    div.appendChild(createProblemPreview(window.spaceman.rootevents.ProblemRoot))
+    div.appendChild(createElementProblemPreview(window.spaceman.rootevents.ProblemRoot))
     waitForStateReady(()=>{
         Object.keys(window.spaceman.CurrentState.state.problems).forEach(problem => {
-            recursiveRender(problem)
+            recursiveRenderProblemPreview(problem)
             // let parentNode = document.getElementById(window.spaceman.CurrentState.state.problems[problem].Parent+"_children")
             // let thisNode = document.getElementById(problem+"_problem_box")
             // if (parentNode && !thisNode) {
@@ -26,7 +27,7 @@ export function createProblemsFromState() {
     return div
 }
 
-function recursiveRender(problem) {
+function recursiveRenderProblemPreview(problem) {
         let thisProblem = window.spaceman.CurrentState.state.problems[problem]
         if (thisProblem) {
             let parentNode = document.getElementById(thisProblem.Parent+"_children")
@@ -35,25 +36,25 @@ function recursiveRender(problem) {
                 return
             }
             if (parentNode && !thisNode) {
-                parentNode.appendChild(createProblemPreview(problem))
+                parentNode.appendChild(createElementProblemPreview(problem))
                 return true
             }
             if (!parentNode) {
-                recursiveRender(window.spaceman.CurrentState.state.problems[problem].Parent)
+                recursiveRenderProblemPreview(window.spaceman.CurrentState.state.problems[problem].Parent)
             }
-            recursiveRender(problem)
+            recursiveRenderProblemPreview(problem)
         }
 }
 
-function createProblemPreview(problemID) {
-    return createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[problemID], true)
+function createElementProblemPreview(problemID) {
+    return createElementProblemAnchor(window.spaceman.CurrentState.state.problems[problemID], true)
 }
 
-function createProblemFullView(problemID) {
-    return createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[problemID], false)
+function createElementProblemFullView(problemID) {
+    return createElementProblemAnchor(window.spaceman.CurrentState.state.problems[problemID], false)
 }
 
-function createProblemDivFromAnchor(problem, preview) {
+function createElementProblemAnchor(problem, preview) {
     if (problem) {
         let d = document.createElement("div")
         d.id = problem.UID+"_problem_box"
@@ -106,7 +107,7 @@ function createProblemDivFromAnchor(problem, preview) {
             let readMore = makeLinkWithOnclick("more...", ()=>{
                 let div = document.getElementById("problems")
                 if (div) {
-                    div.replaceChildren(createProblemFullView(problem.UID))
+                    div.replaceChildren(createElementProblemFullView(problem.UID))
                 }
             })
             actionBox.appendChild(readMore)
@@ -236,6 +237,9 @@ function createProblemDivFromAnchor(problem, preview) {
             //actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem, spacer("|"), printToConsole)
         }
         d.append(p, actionBox, c)
+        if (!preview) {
+            d.appendChild(createElementAllComments(problem.UID))
+        }
         return d
     }
     return null
@@ -330,7 +334,7 @@ function publish641802(pubkey, anchorID, title, body, parentAnchor) {
     window.spaceman.CurrentState.state.problems[anchorID].Body = body
     window.spaceman.CurrentState.state.problems[anchorID].Title = title
     if (parentAnchor) {
-        document.getElementById(parentAnchor+"_children").appendChild(createProblemDivFromAnchor(window.spaceman.CurrentState.state.problems[anchorID]))
+        document.getElementById(parentAnchor+"_children").appendChild(createElementProblemAnchor(window.spaceman.CurrentState.state.problems[anchorID]))
     }
 
 }

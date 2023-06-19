@@ -26,3 +26,21 @@ export function addReplayProtection(pubkey, tags, r) {
     }
     return tags
 }
+
+export function getTagContent(event, tagType, tagKey) {
+    let tagContent = null
+    event.tags.forEach(tag => {
+        tag.forEach(tagInner => {
+            if (tagInner === tagType) {
+                if (tagKey) {
+                    if (tag[0] === tagKey) {
+                    tagContent = tag[1]
+                }}
+                if (!tagKey) {
+                    tagContent = tag[1]
+                }
+            }
+        })
+    })
+    return tagContent
+}

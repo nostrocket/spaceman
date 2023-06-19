@@ -6,9 +6,8 @@ import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 import {newMirv} from "./src/mirvs/newMirv.js";
 import {updateAccountDetails} from "./src/identity/updateProfile.js";
-import {problems} from "./src/problems/newProblem.js";
 import {createProblemsFromState} from "./src/problems/problemsFromState.js"
-import NDK, {NDKEvent, NDKNip07Signer} from "@nostr-dev-kit/ndk";
+import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-dev-kit/ndk";
 import { nip10 } from 'nostr-tools';
 import {generateKeyPair} from "crypto";
 
@@ -24,7 +23,6 @@ window.spaceman.Functions.problemsFromState = createProblemsFromState
 window.spaceman.renderIdentity = renderIdentities
 window.spaceman.newMirv = newMirv
 window.spaceman.updateAccountDetails = updateAccountDetails
-window.spaceman.displayProblems = problems
 
 
 window.spaceman.rootevents = {}
@@ -43,11 +41,21 @@ window.spaceman.CurrentState.ready = false
 export var ndk : NDK|null = null 
 export var nip07signer :  NDKNip07Signer | null= null
 async function initializeNDK() {
-    
-    try{
+
+    //let events;
+    try {
         nip07signer = await new NDKNip07Signer();
         ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
         ndk.connect();
+        // let filter: NDKFilter = {tags: [["#e", window.spaceman.rootevents.IgnitionEvent]]}
+        // ndk.fetchEvents(filter).then((x) => {
+        //     console.log(x)
+        // });
+        //console.log(events)
+        // let sub= new NDKSubscription(ndk, filter)
+        // sub.on()
+        // sub.start()
+        // sub.on()
         return ndk
     } catch (e) {
         console.log(e)
