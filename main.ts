@@ -10,11 +10,14 @@ import {createProblemsFromState} from "./src/problems/problemsFromState.js"
 import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-dev-kit/ndk";
 import { nip10 } from 'nostr-tools';
 import {generateKeyPair} from "crypto";
+import {beginListeningForEvents} from "./src/helpers/events";
 
 declare global {
     interface Window { spaceman: any; }
 }
 export {};
+
+beginListeningForEvents()
 
 window.spaceman = {}
 
