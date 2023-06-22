@@ -8,7 +8,7 @@ import {newMirv} from "./src/mirvs/newMirv.js";
 import {updateAccountDetails} from "./src/identity/updateProfile.js";
 import {createProblemsFromState} from "./src/problems/problemsFromState.js"
 import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-dev-kit/ndk";
-import { nip10 } from 'nostr-tools';
+import * as nt from 'nostr-tools';
 import {generateKeyPair} from "crypto";
 import {beginListeningForEvents} from "./src/helpers/events";
 
@@ -39,6 +39,7 @@ window.spaceman.rootevents.ProblemRoot = "7227dabb075105b1af089d49f20896ce8809f3
 
 window.spaceman.CurrentState = {}
 window.spaceman.CurrentState.ready = false
+window.spaceman.nt = nt
 
 
 export var ndk : NDK|null = null 
@@ -59,6 +60,7 @@ async function initializeNDK() {
         // sub.on()
         // sub.start()
         // sub.on()
+        window.spaceman.ndk = ndk
         return ndk
     } catch (e) {
         console.log(e)

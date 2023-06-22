@@ -1,6 +1,8 @@
 import * as state from '../state/state.js'
 import {makeTags} from "../helpers/tags.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
+import {NDKEvent} from "@nostr-dev-kit/ndk";
+import {ndk} from "../../main.ts";
 
 
 
@@ -76,11 +78,11 @@ async function addToIdentityTree(account) {
     content = JSON.stringify({target: account, maintainer: false, ush: true, character: false})
     let tags;
     tags = makeTags(window.spaceman.pubkey, "identity")
-    let unsigned = makeUnsignedEvent(content, tags, 640402, window.spaceman.pubkey)
-    signAsynchronously(unsigned).then(signed => {
-        console.log(signed)
-        publish(signed)
-    })
+    let ndkEvent = new NDKEvent(ndk);
+    ndkEvent.kind = 640402
+    ndkEvent.content = content
+    ndkEvent.tags = tags
+    ndkEvent.publish()
 }
 
 function makePerson(identity) {

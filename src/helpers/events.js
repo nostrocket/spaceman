@@ -7,7 +7,6 @@ import {enmapReply} from "../problems/events.js";
 var startedListening = false
 
 export function beginListeningForEvents() {
-    console.log(10)
     if (!startedListening) {
         startedListening = true
         const pool = new NostrTools.SimplePool()

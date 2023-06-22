@@ -4,6 +4,8 @@ import {makeH3, makeParagraph, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {makeTags} from "../helpers/tags.js";
 import {waitForKind0Ready,getKind0Object,kind0Objects} from "./kind0.js";
+import {NDKEvent} from "@nostr-dev-kit/ndk";
+import {ndk} from "../../main.ts";
 export function updateAccountDetails() {
     let form = document.createElement("div")
     form.appendChild(usernameAndBioForm())
@@ -103,9 +105,11 @@ function usernameAndBioForm() {
                     username = kind0Objects.get(window.spaceman.pubkey).name
                     haveExistingKind0 = true
                 }
-                if (kind0Objects.get(window.spaceman.pubkey).about.length > 0) {
-                    about = kind0Objects.get(window.spaceman.pubkey).about
-                    haveExistingKind0 = true
+                if (kind0Objects.get(window.spaceman.pubkey).about) {
+                    if (kind0Objects.get(window.spaceman.pubkey).about.length > 0) {
+                        about = kind0Objects.get(window.spaceman.pubkey).about
+                        haveExistingKind0 = true
+                    }
                 }
                 updateUsernameAndBioForm(div,haveExistingKind0,username,about)
             }
@@ -131,9 +135,11 @@ async function setBio(name, about) {
     if ((name.length > 0) || (about.length > 0)) {
         let content = JSON.stringify({name: name, about: about})
         let tags = makeTags(window.spaceman.pubkey, "identity")
-        signAsynchronously(makeUnsignedEvent(content, tags, 640400, window.spaceman.pubkey)).then(signed => {
-            publish(signed)
-        })
+        let ndkEvent = new NDKEvent(ndk);
+        ndkEvent.kind = 640400
+        ndkEvent.content = content
+        ndkEvent.tags = tags
+        ndkEvent.publish()
     } else {
         console.log("username and bio can't both be empty")
     }
