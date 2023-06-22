@@ -11,7 +11,7 @@ import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-
 import * as nt from 'nostr-tools';
 import {generateKeyPair} from "crypto";
 import {beginListeningForEvents} from "./src/helpers/events";
-
+console.log(14)
 declare global {
     interface Window { spaceman: any; }
 }
@@ -69,23 +69,33 @@ async function initializeNDK() {
     }
 }
 
+var calledGetPubkey: boolean = false
+if (!calledGetPubkey) {
+    calledGetPubkey = true
+    getPubkey()
+}
 
-setTimeout(function(){
-    if (window.nostr) {
-        initializeNDK().then(x=> {
-            ndk = x
-            nip07signer.user().then(y=>{
-                window.spaceman.pubkey = y.hexpubkey()
-                if (document.getElementById("pubkey")) {
-                    document.getElementById("pubkey").innerText = y.npub.substring(0, 12)
-                }
+function getPubkey() {
+    console.log(79)
+    setTimeout(function(){
+        if (!window.spaceman.pubkey) {
+            initializeNDK().then(x=> {
+                ndk = x
+                nip07signer.user().then(y=>{
+                    window.spaceman.pubkey = y.hexpubkey()
+                    if (document.getElementById("pubkey")) {
+                        document.getElementById("pubkey").innerText = y.npub.substring(0, 12)
+                    }
+                })
             })
-        })
-    } else {
-        window.spaceman.pubkey = ""
-        alert("You can look but you can't touch. Please install a NIP-07 nostr signing browser extension (such as GetAlby or Nos2x) if you want to interact with Nostrocket!")
-    }
-},100)
+        } else if (!window.spaceman.pubkey) {
+            window.spaceman.pubkey = ""
+            alert("You can look but you can't touch. Please install a NIP-07 nostr signing browser extension (such as GetAlby or Nos2x) if you want to interact with Nostrocket!")
+        }
+    },100)
+}
+
+
 // setTimeout(function(){
 //     if (window.nostr) {
 //         window.nostr.getPublicKey().then(x=>{

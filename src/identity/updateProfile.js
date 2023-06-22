@@ -122,10 +122,6 @@ function usernameAndBioForm() {
     } else {
         alert("Error: multiple identities found for this pubkey.")
     }
-
-
-
-
     return createUsernameAndBioForm(div,false,username,about)
 }
 
@@ -139,7 +135,7 @@ async function setBio(name, about) {
         ndkEvent.kind = 640400
         ndkEvent.content = content
         ndkEvent.tags = tags
-        ndkEvent.publish()
+        await ndkEvent.publish()
     } else {
         console.log("username and bio can't both be empty")
     }

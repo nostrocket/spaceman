@@ -1,0 +1,22 @@
+.person {
+    border-style: solid;
+    border-color: rgb(250, 122, 11);
+    border-width: medium;
+    background-color: rgb(44, 14, 87);
+    margin: 1%;
+    padding: 0.5%;
+}
+.order {
+    background-color: rgba(239, 0, 246, 0.63);
+    padding: 0.5%;
+}
+
+.about {
+    background-color: rgba(0, 255, 234, 0.55);
+    padding: 0.5%;
+}
+
+.added_by {
+    background-color: rgba(250, 122, 11, 0.8);
+    padding: 0.5%;
+}
