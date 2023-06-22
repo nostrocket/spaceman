@@ -50,6 +50,12 @@ function makeIdentityLayout(){
     let left = document.createElement("div")
     left.id = "left-column"
     d.appendChild(makeH3("Identity Tree"))
+    let joinButton = document.createElement("button")
+    joinButton.innerText = "Request to join"
+    joinButton.onclick = () => {
+        document.getElementById('content').replaceChildren(window.spaceman.updateAccountDetails())
+    }
+    left.appendChild(joinButton)
     let added = document.createElement("ul")
     added.id = "provedIdentities"
     left.appendChild(added)
