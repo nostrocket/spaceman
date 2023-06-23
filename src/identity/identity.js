@@ -4,7 +4,7 @@ import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
 import './identity.css'
-import {makeParagraph} from "../helpers/markdown.js";
+import {makeLink, makeLinkWithOnclick, makeParagraph} from "../helpers/markdown.js";
 
 
 export default function renderIdentityLayout() {
@@ -40,6 +40,39 @@ export default function renderIdentityLayout() {
     return makeIdentityLayout()
 }
 
+function renderIdentityLayoutAsTree() {
+    state.waitForStateReady(()=>{
+        // let orderedIdentities = []
+        //
+        // state.identities().forEach(x => {
+        //     orderedIdentities.push(x)
+        // })
+        // orderedIdentities.sort(compareOrder)
+        // orderedIdentities.forEach(i => {
+        //     if (i.Name.length > 0) {
+        //         if (i.UniqueSovereignBy === null || i.UniqueSovereignBy === '') {
+        //             document.getElementById("right-column").appendChild(makePerson(i));
+        //         } else {
+        //             document.getElementById("left-column").appendChild(makePerson(i))
+        //         }
+        //     }
+        // })
+
+        const rootNode = state.identities().find(node => node.UniqueSovereignBy === '1Humanityrvhus5mFWRRzuJjtAbjk2qwww');
+        let USHIdentities = state.identities().filter(x => x.UniqueSovereignBy !== null && x.UniqueSovereignBy !== '')
+        document.getElementById("left-column").innerHTML = renderTree(USHIdentities, rootNode)
+
+        state.identities().forEach(i => {
+
+            const sovereignBy = i.UniqueSovereignBy;
+            if (sovereignBy === null || sovereignBy === '' && i.Name.length > 0 ) {
+                document.getElementById("right-column").appendChild(makePerson(i));
+            }
+        })
+    })
+    return makeIdentityLayout()
+}
+
 function compareOrder(a, b) {
     return a.Order - b.Order;
 }
@@ -56,6 +89,16 @@ function makeIdentityLayout(){
         document.getElementById('content').replaceChildren(window.spaceman.updateAccountDetails())
     }
     left.appendChild(joinButton)
+    left.appendChild(makeLinkWithOnclick(
+        "Display as graph",
+        () => {
+            document.getElementById('content').replaceChildren(
+                renderIdentityLayoutAsTree()
+            )
+        },
+        "tree"
+        )
+    )
     let added = document.createElement("ul")
     added.id = "provedIdentities"
     left.appendChild(added)
