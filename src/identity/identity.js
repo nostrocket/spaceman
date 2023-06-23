@@ -18,9 +18,9 @@ export default function renderIdentityLayout() {
         orderedIdentities.forEach(i => {
             if (i.Name.length > 0) {
                 if (i.UniqueSovereignBy === null || i.UniqueSovereignBy === '') {
-                    document.getElementById("right-column").appendChild(makePerson(i));
+                    document.getElementById("right-column").appendChild(makePerson(i, true));
                 } else {
-                    document.getElementById("left-column").appendChild(makePerson(i))
+                    document.getElementById("left-column").appendChild(makePerson(i, true))
                 }
             }
         })
@@ -95,9 +95,7 @@ function makeIdentityLayout(){
             document.getElementById('content').replaceChildren(
                 renderIdentityLayoutAsTree()
             )
-        },
-        "tree"
-        )
+        })
     )
     let added = document.createElement("ul")
     added.id = "provedIdentities"
@@ -151,36 +149,38 @@ async function addToIdentityTree(account) {
     await ndkEvent.publish()
 }
 
-function makePerson(identity) {
+function makePerson(identity, full) {
     let outer = document.createElement("div")
     let p = document.createElement("div")
     p.className = "person"
     p.id = identity.Name
     p.appendChild(makeH3(identity.Name + " [" + window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10) + "]"))
+    if (full) {
+        let about = makeParagraph(identity.About)
+        about.className = "about"
+        p.appendChild(about)
 
-    let about = makeParagraph(identity.About)
-    about.className = "about"
-    p.appendChild(about)
-
-    //p.appendChild(makeItem("Account", window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10)))
-    let addedByAccount = ""
-    if (window.spaceman.CurrentState.state.identity[identity.UniqueSovereignBy]) {
-        addedByAccount = window.spaceman.CurrentState.state.identity[identity.UniqueSovereignBy].Name
-    } else {
-        addedByAccount =  identity.UniqueSovereignBy
-    }
-    if (addedByAccount) {
-        let addedBy = makeItem("Added By", addedByAccount)
-        addedBy.className = "added_by"
-        p.appendChild(addedBy)
-        let order = makeItem("Account Number", identity.Order)
-        order.className = "order"
-        p.appendChild(order)
-    } else {
-        if (identity.UniqueSovereignBy === null || identity.UniqueSovereignBy === ''){
-            p.appendChild(createAddButton(identity))
+        //p.appendChild(makeItem("Account", window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10)))
+        let addedByAccount = ""
+        if (window.spaceman.CurrentState.state.identity[identity.UniqueSovereignBy]) {
+            addedByAccount = window.spaceman.CurrentState.state.identity[identity.UniqueSovereignBy].Name
+        } else {
+            addedByAccount =  identity.UniqueSovereignBy
+        }
+        if (addedByAccount) {
+            let addedBy = makeItem("Added By", addedByAccount)
+            addedBy.className = "added_by"
+            p.appendChild(addedBy)
+            let order = makeItem("Account Number", identity.Order)
+            order.className = "order"
+            p.appendChild(order)
+        } else {
+            if (identity.UniqueSovereignBy === null || identity.UniqueSovereignBy === ''){
+                p.appendChild(createAddButton(identity))
+            }
         }
     }
+
     outer.appendChild(p)
     return outer
 }

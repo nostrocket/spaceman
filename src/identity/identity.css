@@ -21,3 +21,8 @@
     background-color: rgba(250, 122, 11, 0.8);
     padding: 0.5%;
 }
+
+ul {
+    list-style: square;
+    padding-left: 12px;
+}

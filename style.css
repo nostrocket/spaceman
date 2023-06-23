@@ -123,3 +123,8 @@ button:focus-visible {
   padding-left: 3px;
   padding-right: 3px;
 }
+
+
+.link {
+  cursor: pointer;
+}
