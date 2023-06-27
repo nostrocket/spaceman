@@ -16,10 +16,13 @@ export function addReplayProtection(pubkey, tags, r) {
             pubkey = window.spaceman.pubkey
         }
         if (pubkeyInIdentity(pubkey)){
-            tags.push(["r", getReplayForAccount(pubkey), "", "reply"])
-        } else {
-            tags.push(["r", window.spaceman.rootevents.ReplayRoot, "", "reply"])
+            let replayTag = getReplayForAccount(pubkey)
+            if (replayTag) {
+                tags.push(["r", replayTag, "", "reply"])
+                return tags
+            }
         }
+        tags.push(["r", window.spaceman.rootevents.ReplayRoot, "", "reply"])
     }
     if (r) {
         tags.push(["r", r, "", "reply"])

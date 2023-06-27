@@ -45,7 +45,10 @@ export function pubkeyInIdentity(pubkey) {
 }
 
 export function getReplayForAccount(account) {
-    return window.spaceman.CurrentState.state.replay[account]
+    if (window.spaceman.CurrentState.state.replay) {
+        return window.spaceman.CurrentState.state.replay[account]
+    }
+    return null
 }
 
 export function getIdentityByAccount(account) {

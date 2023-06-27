@@ -135,7 +135,10 @@ async function setBio(name, about) {
         ndkEvent.kind = 640400
         ndkEvent.content = content
         ndkEvent.tags = tags
-        await ndkEvent.publish()
+        await ndkEvent.publish().catch(x => {
+            console.log(x)
+        })
+        console.log(ndkEvent.rawEvent())
     } else {
         console.log("username and bio can't both be empty")
     }

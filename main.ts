@@ -17,7 +17,7 @@ declare global {
 }
 export {};
 
-beginListeningForEvents()
+
 
 window.spaceman = {}
 
@@ -27,14 +27,16 @@ window.spaceman.renderIdentity = renderIdentities
 window.spaceman.newMirv = newMirv
 window.spaceman.updateAccountDetails = updateAccountDetails
 
+window.spaceman.ignition_account = "546b4d7f86fe2c1fcc7eb10bf96c2eaef1daa26c67dad348ff0e9c853ffe8882"
+
 
 window.spaceman.rootevents = {}
-window.spaceman.rootevents.IdentityRoot = "0a73208becd0b1a9d294e6caef14352047ab44b848930e6979937fe09effaf71"
-window.spaceman.rootevents.SharesRoot = "7fd9810bdb8bc635633cc4e3d0888e395420aedc7d28778c100793d1d3bc09a6"
-window.spaceman.rootevents.MirvsRoot = "c7f87218e62f6d41fa2f5b2480210ed1d48b2609e03e9b4b500a3b64e3c08554"
-window.spaceman.rootevents.IgnitionEvent = "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c"
-window.spaceman.rootevents.ReplayRoot = "24c30ad7f036ed49379b5d1209836d1ff6795adb34da2d3e4cabc47dc9dfef21"
-window.spaceman.rootevents.ProblemRoot = "7227dabb075105b1af089d49f20896ce8809f386b9263aa78224e00b630c9622"
+window.spaceman.rootevents.IgnitionEvent = "1bf16cac62588cfd7e3c336b8548fa49a09627f03dbf06c7a4fee27bc01972c8"
+window.spaceman.rootevents.IdentityRoot = "320c1d0a15bd0d84c3527862ad02d558df3893dfbbc488dcf7530abec25d23bb"
+window.spaceman.rootevents.SharesRoot = "083e612017800c276fbbeda8fe3a965daf63bb3030dd0535cfcd7d06afabb870"
+window.spaceman.rootevents.MirvsRoot = "0f56599b6530f1ed1c11745b76a0d0fc29934e9a90accce1521f4dfac7a78532"
+window.spaceman.rootevents.ReplayRoot = "e29992d4c7d272dfc274b8a68f735c76dd361a24cc08bdf2ed6fe8808485024c"
+window.spaceman.rootevents.ProblemRoot = "339d1188c9076d4c44119fca7f29b9b4c32b775853290075e4519ecdfdea4f38"
 
 
 window.spaceman.CurrentState = {}
@@ -159,3 +161,8 @@ window.spaceman.Functions.isValidated = (pubkey: string, type: string) :boolean 
     }
     return false
 }
+
+window.spaceman.Functions.sendEvent = (e) => {
+}
+
+beginListeningForEvents()

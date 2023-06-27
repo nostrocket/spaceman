@@ -17,7 +17,7 @@ export function beginListeningForEvents() {
             [
                 {
                     //tags: [['#e', 'fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c']]
-                    "#e": "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c"
+                    "#e": window.spaceman.rootevents.IgnitionEvent
                     //kinds: [10310]
                     // authors: [
                     //     "b4f36e2a63792324a92f3b7d973fcc33eaa7720aaeee71729ac74d7ba7677675"
@@ -32,7 +32,8 @@ export function beginListeningForEvents() {
                 enmapReply(event)
             }
             if (event.kind === 10310) {
-                if (event.pubkey === "b4f36e2a63792324a92f3b7d973fcc33eaa7720aaeee71729ac74d7ba7677675" || event.pubkey === window.spaceman.pubkey) {
+                console.log(event)
+                if (event.pubkey === window.spaceman.ignition_account || event.pubkey === window.spaceman.pubkey) {
                     //todo this should check for current pubkey || any pubkey with votepower > x
                     state.enMapState(event)
                     document.getElementById("content").replaceChildren()
