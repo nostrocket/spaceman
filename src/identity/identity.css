@@ -2,10 +2,14 @@
     border-style: solid;
     border-color: rgb(250, 122, 11);
     border-width: medium;
-    background-color: rgb(44, 14, 87);
+    background-color: rgba(68, 30, 133, 0.52);
     margin: 1%;
     margin-bottom: 3%;
     padding: 0.5%;
+}
+
+.link {
+
 }
 .order {
     background-color: rgba(239, 0, 246, 0.63);
