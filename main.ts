@@ -115,7 +115,7 @@ window.spaceman.Functions.fetchevent = (id) => {
     if (id) {
         filter = {ids: [[id]]}
     } else {
-        filter = {"#e": "3fd2242a22d2c84c02196013ffa62c37ef7edeea421ba09e79c199b8d3a9fd55"}
+        filter = {"#e": window.spaceman.rootevents.IgnitionEvent}
         // {ids: [[window.spaceman.rootevents.ProblemRoot]]}
         //{kinds: [641800, 641802], "#e": window.spaceman.rootevents.IgnitionEvent};
     }

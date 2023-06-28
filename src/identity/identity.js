@@ -137,7 +137,6 @@ function createAddButton(identity,onclick) {
 }
 
 async function addToIdentityTree(account) {
-    console.log(account)
     let content;
     content = JSON.stringify({target: account, maintainer: false, ush: true, character: false})
     let tags;
@@ -147,6 +146,7 @@ async function addToIdentityTree(account) {
     ndkEvent.content = content
     ndkEvent.tags = tags
     await ndkEvent.publish()
+    console.log(ndkEvent.rawEvent())
 }
 
 function makePerson(identity, full) {
@@ -154,7 +154,7 @@ function makePerson(identity, full) {
     let p = document.createElement("div")
     p.className = "person"
     p.id = identity.Name
-    p.appendChild(makeH3(identity.Name + " [" + window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10) + "]"))
+    p.appendChild(makeLink("https://snort.social/p/"+window.spaceman.nt.nip19.npubEncode(identity.Account), identity.Name + " [" + window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10) + "]"))//makeH3(identity.Name + " [" + window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10) + "]"))
     if (full) {
         let about = makeParagraph(identity.About)
         about.className = "about"
