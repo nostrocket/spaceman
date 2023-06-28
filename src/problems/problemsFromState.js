@@ -1,6 +1,6 @@
 import {waitForStateReady} from "../state/state.js";
 import './problems.css'
-import {createButton, makeItem, makeLinkWithOnclick, spacer} from "../helpers/markdown.js";
+import {createButton, makeH3, makeItem, makeLinkWithOnclick, makeParagraph, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
@@ -74,10 +74,18 @@ function createElementProblemAnchor(problem, preview) {
         }
         let p = document.createElement("div")
         p.id = problem.UID + "_problem"
-        p.innerHTML = "<h3>" + problem.Title + "</h3>"
-        p.innerHTML += "<p>" + problem.Body + "</p>"
+        p.appendChild(makeH3(problem.Title))
+        if (preview) {
+            p.appendChild(makeParagraph(problem.Body.substring(0, 280) + "..."))
+        } else {
+            p.appendChild(makeParagraph(problem.Body))
+        }
+
+        //p.innerHTML = "<h3>" + problem.Title + "</h3>"
+        //p.innerHTML += "<p>" + problem.Body + "</p>"
         if (window.spaceman.CurrentState.state.identity[problem.CreatedBy]) {
-            p.innerHTML += "<p>Logged By: " + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "</p>"
+            p.appendChild(makeParagraph("Logged by: " + "[" + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "](" + "https://snort.social/p/"+problem.CreatedBy+")"))
+            //p.innerHTML += "<p>Logged By: " + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "</p>"
         }
         if (window.spaceman.CurrentState.state.identity[problem.ClaimedBy]) {
             // let depose = makeLinkWithOnclick("force remove", ()=>{
@@ -112,7 +120,8 @@ function createElementProblemAnchor(problem, preview) {
             })
             actionBox.appendChild(readMore)
         } else {
-            p.innerHTML += "<div class='id'>"+problem.UID+"</div>"
+            p.appendChild(makeParagraph("ID: " + problem.UID))
+            //p.innerHTML += "<div class='id'>"+problem.UID+"</div>"
 
             //EDIT
             actionBox.appendChild(makeLinkWithOnclick("edit", ()=>{

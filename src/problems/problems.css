@@ -4,7 +4,6 @@
     border-width: thin;
     border-left-style: solid;
     border-top-style: solid;
-
 }
 
 .problem {
@@ -28,6 +27,7 @@
     border-left-style: solid;
     border-top-style: solid;
     padding: 1%;
+    max-width: 800px;
 }
 
 .id {

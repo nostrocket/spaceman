@@ -44,6 +44,11 @@ h1 {
   text-align: center;
 }
 
+#container {
+  padding: 0.5%;
+  width: 98%;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -82,19 +87,6 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 .columns-wrapper {
