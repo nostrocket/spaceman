@@ -51,7 +51,7 @@ async function initializeNDK() {
     //let events;
     try {
         nip07signer = await new NDKNip07Signer();
-        ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org"]});
+        ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org", "wss://relay.damus.io"]});
         ndk.connect();
         // let filter: NDKFilter = {tags: [["#e", window.spaceman.rootevents.IgnitionEvent]]}
         // ndk.fetchEvents(filter).then((x) => {

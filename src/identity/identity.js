@@ -5,6 +5,7 @@ import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
 import './identity.css'
 import {makeLink, makeLinkWithOnclick, makeParagraph} from "../helpers/markdown.js";
+import {getKind0Object, kind0Objects, waitForKind0Ready} from "./kind0.js";
 
 
 export default function renderIdentityLayout() {
@@ -17,6 +18,7 @@ export default function renderIdentityLayout() {
         orderedIdentities.sort(compareOrder)
         orderedIdentities.forEach(i => {
             if (i.Name.length > 0) {
+
                 if (i.UniqueSovereignBy === null || i.UniqueSovereignBy === '') {
                     document.getElementById("right-column").appendChild(makePerson(i, true));
                 } else {
@@ -38,6 +40,15 @@ export default function renderIdentityLayout() {
         // })
     })
     return makeIdentityLayout()
+}
+
+async function getKind0(pubkey) {
+    const pablo = ndk.getUser({
+        npub: window.spaceman.nt.nip19.npubEncode(pubkey)
+    });
+    await pablo.fetchProfile();
+    document.getElementById(pubkey+"_about").replaceChildren(makeParagraph(pablo.profile.about))
+    // https://www.youtube.com/watch?v=rog8ou-ZepE
 }
 
 function renderIdentityLayoutAsTree() {
@@ -156,10 +167,28 @@ function makePerson(identity, full) {
     p.id = identity.Name
     p.appendChild(makeLink("https://snort.social/p/"+window.spaceman.nt.nip19.npubEncode(identity.Account), identity.Name + " [" + window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10) + "]"))//makeH3(identity.Name + " [" + window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10) + "]"))
     if (full) {
-        let about = makeParagraph(identity.About)
+        //let about = makeParagraph(identity.About)
+        let about = document.createElement("div")
+        about.id = identity.Account + "_about"
         about.className = "about"
         p.appendChild(about)
+        getKind0(identity.Account)
 
+        // getKind0Object(window.spaceman.pubkey,["wss://relay.damus.io"])
+        // waitForKind0Ready(function(){
+        //     if (kind0Objects.get(identity.Account) !== undefined) {
+        //         if (kind0Objects.get(window.spaceman.pubkey).name.length > 0) {
+        //             username = kind0Objects.get(window.spaceman.pubkey).name
+        //             haveExistingKind0 = true
+        //         }
+        //         // if (kind0Objects.get(window.spaceman.pubkey).about) {
+        //         //     if (kind0Objects.get(window.spaceman.pubkey).about.length > 0) {
+        //         //         about = kind0Objects.get(window.spaceman.pubkey).about
+        //         //         haveExistingKind0 = true
+        //         //     }
+        //         // }
+        //
+        //         document.getElementById(window.spaceman.pubkey).replaceChildren(createUsernameAndBioForm(haveExistingKind0,username))
         //p.appendChild(makeItem("Account", window.spaceman.nt.nip19.npubEncode(identity.Account).substring(0, 10)))
         let addedByAccount = ""
         if (window.spaceman.CurrentState.state.identity[identity.UniqueSovereignBy]) {
