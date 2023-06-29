@@ -72,3 +72,14 @@
     background-color: rgb(24, 41, 65);
     margin-bottom: 2%;
 }
+
+.input {
+    display: block;
+    width: 100%;
+}
+
+.textarea {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+}

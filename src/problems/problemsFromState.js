@@ -281,22 +281,28 @@ function sendMetadataUpdate(UID, operation) {
     console.log(e)
 }
 
+const defaultProblemTitle = "Problem: describe the problem you face or have observed in less than 100 characters"
+
+const defaultProblemDescription = "" +
+    "Explain the problem as clearly as possible. Markdown **is supported**.\n\n" +
+    "#### Solution: If you have an idea of what the solution might be, include it."
+
 function makeProblemForm(parentAnchor, currentAnchor) {
     let div = document.createElement("div")
-    let existingProblemTitle = "";
-    let existingProblemBody = "";
+    let prefilledProblemTitle = defaultProblemTitle;
+    let prefilledProblemBody = defaultProblemDescription;
     if (currentAnchor) {
         let currentProblem = window.spaceman.CurrentState.state.problems[currentAnchor]
         if (currentProblem) {
-            existingProblemTitle = currentProblem.Title
-            existingProblemBody = currentProblem.Body
+            prefilledProblemTitle = currentProblem.Title
+            prefilledProblemBody = currentProblem.Body
         }
     }
-    div.appendChild(makeTextInput("Title", "Problem: summarize the problem you face or have observed in less than 100 characters", "title input", 100, existingProblemTitle))
+    div.appendChild(makeTextInput("Title", "Problem: summarize the problem you face or have observed in less than 100 characters", "title input", 100, prefilledProblemTitle))
     if (!parentAnchor && !currentAnchor) {
         div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
     }
-    div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, existingProblemBody))
+    div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, prefilledProblemBody))
     div.appendChild(createButton("Publish!",
         function () {
             //create anchor event
