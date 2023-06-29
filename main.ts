@@ -11,6 +11,7 @@ import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-
 import * as nt from 'nostr-tools';
 import {generateKeyPair} from "crypto";
 import {beginListeningForEvents} from "./src/helpers/events";
+import "@fontsource/ubuntu/700.css";
 console.log(14)
 declare global {
     interface Window { spaceman: any; }

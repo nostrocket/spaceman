@@ -76,7 +76,15 @@ function createElementProblemAnchor(problem, preview) {
         p.id = problem.UID + "_problem"
         p.appendChild(makeH3(problem.Title))
         if (preview) {
-            p.appendChild(makeParagraph(problem.Body.substring(0, 280) + "..."))
+            let bod = makeParagraph(problem.Body.substring(0, 280) + "...")
+            let readMore = makeLinkWithOnclick("read more...", ()=>{
+                let div = document.getElementById("problems")
+                if (div) {
+                    div.replaceChildren(createElementProblemFullView(problem.UID))
+                }
+            })
+            bod.appendChild(readMore)
+            p.appendChild(bod)
         } else {
             p.appendChild(makeParagraph(problem.Body))
         }
@@ -111,15 +119,7 @@ function createElementProblemAnchor(problem, preview) {
         let actionBox = document.createElement("div")
         actionBox.className = actionBox
         actionBox.id = problem.UID+"_action_box"
-        if (preview) {
-            let readMore = makeLinkWithOnclick("more...", ()=>{
-                let div = document.getElementById("problems")
-                if (div) {
-                    div.replaceChildren(createElementProblemFullView(problem.UID))
-                }
-            })
-            actionBox.appendChild(readMore)
-        } else {
+        if (!preview) {
             p.appendChild(makeParagraph("ID: " + problem.UID))
             //p.innerHTML += "<div class='id'>"+problem.UID+"</div>"
 

@@ -1,19 +1,29 @@
 @import '/node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 
+
 :root {
-  font-family: Ubuntu, sans-serif;
+  font-family: Ubuntu;
+  font-size: medium;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: rgba(45, 4, 115, 0.52);
+  background-color: #24045e;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+:root {
+  font-weight: normal;
+}
+
+strong {
+  font-weight: bold;
 }
 
 a {
