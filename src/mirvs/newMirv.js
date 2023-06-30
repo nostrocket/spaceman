@@ -11,7 +11,7 @@ import "./mirv.css"
 export function newMirv() {
     let div = document.createElement("div")
     div.appendChild(makeTextInput("Name", "Rocket Name", "name input", 20, ""))
-    div.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, "e624297b5a66775ee21a2565c023764bf6dc73cbbb0a1579fa5ff40ff50d59cd"))
+    div.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, ""))
     let b = document.createElement("button")
     b.innerText = "Do it!"
     b.onclick = function () {
@@ -72,7 +72,15 @@ function createElementMirv(mirv){
 }
 
 async function newMirvName(name, problem) {
-    if (name.length > 3) {
+    if (!window.spaceman.CurrentState.state.problems[problem]) {
+        alert("invalid problem")
+        return
+    }
+
+    if (name.length < 4) {
+        alert("name too short")
+        return
+    }
         let content;
         content = JSON.stringify({rocket_id: name, problem_id: problem})
         let tags;
@@ -83,15 +91,6 @@ async function newMirvName(name, problem) {
         ndkEvent.tags = tags
         await ndkEvent.publish()
         return ndkEvent.id
-        // let unsigned = makeUnsignedEvent(content, tags, 640600, window.spaceman.pubkey)
-        // let signed = await signAsynchronously(unsigned)
-        // return signed
-        // await sendEventToRocket(content, tags, 640600, window.spaceman.pubkey).then(x =>{
-        //     return x
-        // })
-    } else {
-        console.log("name is too short")
-    }
 }
 
 async function newMirvCapTable(name, r) {
