@@ -90,6 +90,7 @@ function paidRelayNotice() {
         "\nThis is to prevent spam, and one day it might be enough sats to pay for relay upkeep.   " +
         "\nThe fee is currently 1000 sats for 2016 blocks."))
     div.appendChild(makeLink("https://nostr.688.org/join", "Click here to join the relay now"))
+    div.appendChild(makeParagraph("Note: it's a bit buggy. After you pay the invoice, you need to send some events to the relay to trigger it to check for the payment. The easiest way to do this is add `wss://nostr.688.org` to one of your clients and rebroadcast some events."))
     return div
 }
 
