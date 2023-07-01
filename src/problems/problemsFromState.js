@@ -5,24 +5,19 @@ import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {addReplayProtection} from "../helpers/tags.js";
-import {createElementAllComments} from "./comments.js";
+import {beginListeningForComments, createElementAllComments} from "./comments.js";
 
 export function createProblemsFromState() {
     let div = document.createElement("div")
     div.id = "problems"
     div.appendChild(createElementProblemPreview(window.spaceman.rootevents.ProblemRoot))
     waitForStateReady(()=>{
+        let ids = []
         Object.keys(window.spaceman.CurrentState.state.problems).forEach(problem => {
+            ids.push(problem)
             recursiveRenderProblemPreview(problem)
-            // let parentNode = document.getElementById(window.spaceman.CurrentState.state.problems[problem].Parent+"_children")
-            // let thisNode = document.getElementById(problem+"_problem_box")
-            // if (parentNode && !thisNode) {
-            //     console.log("rendering " + problem)
-            //     parentNode.appendChild(createProblemPreview(problem))
-            // } else {
-            //     console.log(problem)
-            // }
         })
+        beginListeningForComments(ids)
     })
     return div
 }
@@ -202,7 +197,15 @@ function createElementProblemAnchor(problem, preview) {
 
             //COMMENT
             actionBox.appendChild(makeLinkWithOnclick("comment", ()=>{
-                console.log("todo: implement comment")
+                if (!document.getElementById(problem.UID + "_comment")) {
+                    let div = document.createElement("div")
+                    div.className = "comment_form"
+                    div.innerText = "COMMENT"
+                    let form = makeCommentForm(problem.UID)//makeProblemForm(problem.Parent, problem.UID)
+                    form.id = problem.UID + "_comment"
+                    div.appendChild(form)
+                    d.appendChild(div)
+                }
             }))
             actionBox.appendChild(spacer("|"))
 
@@ -240,6 +243,32 @@ function createElementProblemAnchor(problem, preview) {
         return d
     }
     return null
+}
+
+function makeCommentForm(problemID, commentID) {
+    let box = document.createElement("div")
+    box.className = "comment_box"
+    box.appendChild(makeTextField("Your Comment", "", "comment input", 0, "Markdown **is** supported."))
+    box.appendChild(createButton("Submit", () => {
+        if (document.getElementById("comment input").value) {
+            let ndkEvent = new NDKEvent(ndk);
+            ndkEvent.kind = 1
+            ndkEvent.content = document.getElementById("comment input").value
+            ndkEvent.tags = []
+            if (commentID) {
+                ndkEvent.tags.push(["e", commentID, "", "reply"], ["e", problemID, "", "root"])
+            } else {
+                ndkEvent.tags.push(["e", problemID, "", "reply"])
+            }
+            ndkEvent.publish().then(() => {
+                console.log(ndkEvent.rawEvent())
+            })
+        }
+
+        console.log(document.getElementById("comment input").value)
+        console.log(problemID)
+    }, "submit"))
+    return box
 }
 
 function hasOpenChildren(UID) {

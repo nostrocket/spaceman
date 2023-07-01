@@ -28,7 +28,7 @@ export function beginListeningForEvents() {
         )
 
         sub.on('event', event => {
-            if (event.kind === 641804) {
+            if (event.kind === 641804 || event.kind === 1) {
                 enmapReply(event)
             }
             if (event.kind === 10310) {
