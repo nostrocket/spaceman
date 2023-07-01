@@ -45,9 +45,7 @@
 
 .closed {
     display: block;
-    border-color: #363636;
     background-color: rgb(26, 26, 26);
-    border-width: medium;
     color: #494949;
     border-left-color: #fa7a0b;
     border-left-width: thin;
@@ -55,9 +53,7 @@
 
 .claimed {
     display: block;
-    border-color: rgb(247, 0, 255);
-    border-width: medium;
-    background-color: rgb(68, 30, 133);
+    background-color: rgba(255, 0, 0, 0.51);
     border-left-color: #fa7a0b;
     border-left-width: thin;
 }
