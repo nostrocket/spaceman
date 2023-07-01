@@ -75,8 +75,12 @@ function createElementProblemAnchor(problem, preview) {
         let p = document.createElement("div")
         p.id = problem.UID + "_problem"
         p.appendChild(makeH3(problem.Title))
+        let bod = document.createElement("div")
         if (preview) {
-            let bod = makeParagraph(problem.Body.substring(0, 280) + "...")
+            if (!problem.Closed) {
+                bod = makeParagraph(problem.Body.substring(0, 280) + "...")
+            }
+
             let readMore = makeLinkWithOnclick("read more...", ()=>{
                 let div = document.getElementById("problems")
                 if (div) {
@@ -88,29 +92,13 @@ function createElementProblemAnchor(problem, preview) {
         } else {
             p.appendChild(makeParagraph(problem.Body))
         }
-
-        //p.innerHTML = "<h3>" + problem.Title + "</h3>"
-        //p.innerHTML += "<p>" + problem.Body + "</p>"
-        if (window.spaceman.CurrentState.state.identity[problem.CreatedBy]) {
+        let problemIsClosedAndThisIsAPreview = (preview && problem.Closed)
+        if (window.spaceman.CurrentState.state.identity[problem.CreatedBy] && !problemIsClosedAndThisIsAPreview) {
             p.appendChild(makeParagraph("Logged by: " + "[" + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "](" + "https://snort.social/p/"+problem.CreatedBy+")"))
-            //p.innerHTML += "<p>Logged By: " + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "</p>"
         }
-        if (window.spaceman.CurrentState.state.identity[problem.ClaimedBy]) {
-            // let depose = makeLinkWithOnclick("force remove", ()=>{
-            //     console.log(70)
-            //     let e = create641804(problem.UID, "abandon")
-            //     e.tags = addReplayProtection("", e.tags)
-            //     e.publish()
-            //     console.log(e)
-            // })
-            // console.log(depose)
-            //let claim = document.createElement("p")
-            let claim = makeItem("Currently being worked on by", window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name)
-            // if (problem.ClaimedBy !== window.spaceman.pubkey && !preview) {
-            //     claim.append(spacer(), depose)
-            // }
-            //p.innerHTML += "<b>Currently being worked on by: </b>" + window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name + "</b>"
-            p.appendChild(claim)
+        if (window.spaceman.CurrentState.state.identity[problem.ClaimedBy] && !problemIsClosedAndThisIsAPreview) {
+            let claimedBy = makeItem("Currently being worked on by", window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name)
+            p.appendChild(claimedBy)
         }
         let c = document.createElement("div")
         c.id = problem.UID + "_children"
