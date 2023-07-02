@@ -47,3 +47,14 @@ export function getTagContent(event, tagType, tagKey) {
     })
     return tagContent
 }
+
+export function isTaggedWith(event, tag) {
+    event.tags.forEach(tag => {
+        tag.forEach(tagInner => {
+            if (tagInner === tag) {
+                return true
+            }
+        })
+    })
+    return false
+}

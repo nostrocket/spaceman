@@ -10,17 +10,33 @@ export function createElementAllComments(problemID) {
     let commentDiv = document.createElement("div")
     commentDiv.id = problemID + "_comments"
     replies.forEach(reply => {
-        let tc = getTagContent(reply, "reply", "e")
-        if (tc) {
-            if (tc === problemID) {
-               comments.push(reply)
-            }
+        if (isTaggedWith(reply, problemID)) {
+            comments.push(reply)
         }
+        // let tc = getTagContent(reply, "reply", "e")
+        // if (tc) {
+        //     if (tc === problemID) {
+        //        comments.push(reply)
+        //     }
+        // }
     })
     comments.forEach(comment => {
         commentDiv.appendChild(createElementComment(comment))
     })
     return commentDiv
+}
+
+function isTaggedWith(event, requestedTag) {
+    let r = false
+    event.tags.forEach(tag => {
+        tag.forEach(tagInner => {
+            if (tagInner === requestedTag) {
+                r = true
+            }
+        })
+    })
+
+    return r
 }
 
 function createElementComment(commentEvent) {
@@ -42,7 +58,7 @@ export function beginListeningForComments(ids) {
         let relays = []
 
         let sub = pool.sub(
-            [...relays, 'wss://nostr.688.org'],
+            [...relays, 'wss://nostr.688.org', 'wss://nos.lol'],
             [
                 {
                     //tags: [['#e', 'fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c']]
@@ -57,8 +73,10 @@ export function beginListeningForComments(ids) {
         )
 
         sub.on('event', event => {
-            console.log(event)
             if (event.kind === 641804 || event.kind === 1) {
+                if (event.id === "6271433eeb795687f985f9b8f04cc9108d3850433621b6804dce0cc2ae53801f") {
+                    console.log("GOT IT 66")
+                }
                 enmapReply(event)
             }
         })

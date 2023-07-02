@@ -137,7 +137,7 @@ function createElementProblemAnchor(problem, preview) {
                                 }
                             let e = create641804(problem.UID, "claim")
                             e.tags = addReplayProtection("", e.tags)
-                            e.publish()
+                            //e.publish()
                             console.log(e)
                         }
                     }

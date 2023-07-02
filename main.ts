@@ -123,7 +123,7 @@ window.spaceman.Functions.fetchevent = (id) => {
 
     let ndk_read = null
     if (ndk === null){
-        ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org"]});
+        ndk_read = new NDK({ explicitRelayUrls: ["wss://nostr.688.org", "wss://nos.lol"]});
         ndk_read.connect();
 
     } else {
