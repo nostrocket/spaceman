@@ -10,11 +10,11 @@ import "./mirv.css"
 
 export function newMirv() {
     let div = document.createElement("div")
-    div.appendChild(makeParagraph("A Mirv is an independently targetable rocket. This feature isn't ready yet."))
+    //div.appendChild(makeParagraph("A Mirv is an independently targetable rocket. This feature isn't ready yet."))
     let form = document.createElement("div")
     form.className = "new_mirv"
     form.appendChild(makeH3("Let's go"))
-    form.appendChild(makeTextInput("Name", "Mirv Name", "name input", 20, ""))
+    form.appendChild(makeTextInput("Name", "Rocket Name", "name input", 20, ""))
     form.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, ""))
     form.appendChild(document.createElement("br"))
     let b = document.createElement("button")
