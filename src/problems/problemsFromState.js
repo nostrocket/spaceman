@@ -6,6 +6,7 @@ import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {addReplayProtection} from "../helpers/tags.js";
 import {beginListeningForComments, createElementAllComments} from "./comments.js";
+import {enmapReply} from "./events.js";
 
 export function createProblemsFromState() {
     let div = document.createElement("div")
@@ -238,11 +239,21 @@ function createElementProblemAnchor(problem, preview) {
         }
         d.append(p, actionBox, c)
         if (!preview) {
-            d.appendChild(createElementAllComments(problem.UID))
+            upsertCommentDiv(d, problem.UID)
         }
         return d
     }
     return null
+}
+
+function upsertCommentDiv(parentDiv, problemID) {
+    let commentDiv = document.getElementById(problemID+"_comments")
+    if (!commentDiv) {
+        parentDiv.appendChild(createElementAllComments(problemID))
+    } else {
+        commentDiv.remove()
+        parentDiv.appendChild(createElementAllComments(problemID))
+    }
 }
 
 function makeCommentForm(problemID, commentID) {
@@ -262,6 +273,9 @@ function makeCommentForm(problemID, commentID) {
             }
             ndkEvent.publish().then(() => {
                 console.log(ndkEvent.rawEvent())
+                box.remove()
+                enmapReply(ndkEvent.rawEvent())
+                upsertCommentDiv(document.getElementById(problemID+"_problem_box"), problemID)
             })
         }
 
