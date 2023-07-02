@@ -6,3 +6,13 @@
     margin: 1%;
     padding: 1%;
 }
+
+.new_mirv {
+    border-style: solid;
+    border-color: rgb(250, 122, 11);
+    border-width: medium;
+    background-color: rgb(44, 14, 87);
+    margin: 1%;
+    padding: 1%;
+    max-width: 600px;
+}

@@ -1,7 +1,7 @@
 import {makeTextInput} from "../helpers/forms.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {waitForStateReady} from "../state/state.js";
-import {makeH3, makeItem, makeText} from "../helpers/markdown.js";
+import {makeH3, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
 import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
@@ -10,23 +10,29 @@ import "./mirv.css"
 
 export function newMirv() {
     let div = document.createElement("div")
-    div.appendChild(makeTextInput("Name", "Rocket Name", "name input", 20, ""))
-    div.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, ""))
+    div.appendChild(makeParagraph("A Mirv is an independently targetable rocket. This feature isn't ready yet."))
+    let form = document.createElement("div")
+    form.className = "new_mirv"
+    form.appendChild(makeH3("Let's go"))
+    form.appendChild(makeTextInput("Name", "Mirv Name", "name input", 20, ""))
+    form.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, ""))
+    form.appendChild(document.createElement("br"))
     let b = document.createElement("button")
     b.innerText = "Do it!"
     b.onclick = function () {
-        newMirvName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value).then(x => {
-            newMirvCapTable(document.getElementById( 'name input' ).value, x).then(() => {
-                console.log()
-            })
-        })
+        alert("this feature isn't ready yet")
+        // newMirvName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value).then(x => {
+        //     newMirvCapTable(document.getElementById( 'name input' ).value, x).then(() => {
+        //         console.log()
+        //     })
+        // })
 
     }
-    div.appendChild(b)
+    form.appendChild(b)
     waitForStateReady(()=>{
         Object.values(window.spaceman.CurrentState.state.mirvs).forEach(m => {
             console.log(m)
-            div.appendChild(createElementMirv(m))
+            form.appendChild(createElementMirv(m))
         })
         // Object.keys(window.spaceman.CurrentState.state.shares).forEach(s => {
         //     div.append(createElementMirv(s))
@@ -42,6 +48,7 @@ export function newMirv() {
     //         div.appendChild(makeNewMirv(mirv))
     //     })
     // }
+    div.appendChild(form)
     return div
 }
 
