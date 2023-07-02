@@ -318,19 +318,19 @@ const defaultProblemDescription = "" +
     "Explain the problem as clearly as possible. Markdown **is supported**.\n\n" +
     "#### Solution: If you have an idea of what the solution might be, include it."
 
-function makeProblemForm(parentAnchor, currentAnchor) {
+function makeProblemForm(parentAnchor, existingAnchorEventID) {
     let div = document.createElement("div")
     let prefilledProblemTitle = defaultProblemTitle;
     let prefilledProblemBody = defaultProblemDescription;
-    if (currentAnchor) {
-        let currentProblem = window.spaceman.CurrentState.state.problems[currentAnchor]
+    if (existingAnchorEventID) {
+        let currentProblem = window.spaceman.CurrentState.state.problems[existingAnchorEventID]
         if (currentProblem) {
             prefilledProblemTitle = currentProblem.Title
             prefilledProblemBody = currentProblem.Body
         }
     }
     div.appendChild(makeTextInput("Title", "Problem: summarize the problem you face or have observed in less than 100 characters", "title input", 100, prefilledProblemTitle))
-    if (!parentAnchor && !currentAnchor) {
+    if (!parentAnchor && !existingAnchorEventID) {
         div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
     }
     div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, prefilledProblemBody))
@@ -347,20 +347,23 @@ function makeProblemForm(parentAnchor, currentAnchor) {
                     }
                 }
                     let body = document.getElementById('description input').value
-                    let title = document.getElementById('title input').value
-                if (!currentAnchor) {
-                    let anchorEvent = makeAnchorEvent(parentAnchor, title)
+                    let description = document.getElementById('title input').value
+                if (!existingAnchorEventID) {
+                    //this is a new problem
+                    let anchorEvent = makeAnchorEvent(parentAnchor, description, body)
                     anchorEvent.tags = addReplayProtection(user.hexpubkey(), anchorEvent.tags)
+                    //console.log(anchorEvent.rawEvent())
                     anchorEvent.publish().then(function () {
                         console.log(anchorEvent.rawEvent());
                         window.spaceman.CurrentState.state.replay[user.hexpubkey()] = anchorEvent.id
-                        console.log(anchorEvent.id)
-                        publish641802(user.hexpubkey(), anchorEvent.id, title, body, parentAnchor)
-                        div.style.display = "none"
+                        // console.log(anchorEvent.id)
+                        // publish641802(user.hexpubkey(), anchorEvent.id, description, body, parentAnchor)
+                        // div.style.display = "none"
                     })
                 }
-                if (currentAnchor) {
-                    publish641802(user.hexpubkey(), currentAnchor, title, body, null)
+                if (existingAnchorEventID) {
+                    //this is modifying an existing problem
+                    publish641802(user.hexpubkey(), existingAnchorEventID, description, body, null)
                     div.style.display = "none"
                 }
             });
@@ -410,29 +413,57 @@ function create641804(problemID, operation) {
     return ndkEvent
 }
 
-function create641802(anchorID, title, content) {
+function create641802(anchorID, title, description) {
     let ndkEvent = new NDKEvent(ndk);
-    ndkEvent.kind = 641802
-    ndkEvent.content = content
+    ndkEvent.kind = 1
+    ndkEvent.content = "I've modified this problem, updates can be seen on the Nostrocket problem tracker."
     ndkEvent.tags = [
         ["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
         ["e", anchorID, "", "reply"],
-        ["title", title]
     ]
+    if (title) {
+        ndkEvent.tags.push(["title", title])
+    }
+    if (description) {
+        ndkEvent.tags.push(["description", description])
+    }
+    if (title || description) {
+        ndkEvent.tags.push(["op", "nostrocket.problem.modify"])
+    }
     return ndkEvent
 }
 
 
 
-function makeAnchorEvent(parentAnchor, content) {
+function makeAnchorEvent(parentAnchor, title, description) {
+    let c = "" //content to be displayed to regular nostr clients
+    let t = [] //title tag
+    let d = [] //description tag
+    if (title) {
+        if (title.length > 0 && title.length < 101) {
+            c = title
+            t = ["title", title]
+        }
+    }
+
+    if (description) {
+        if (description.length > 0) {
+            c += "\n\n"+description
+            d = ["description", description]
+        }
+    }
+
     let ndkEvent = new NDKEvent(ndk);
-    ndkEvent.kind = 641800;
-    ndkEvent.content = content
+    ndkEvent.kind = 1;
+    ndkEvent.content = c
     ndkEvent.tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"]]
     if (parentAnchor) {
         if (parentAnchor.length === 64) {
             ndkEvent.tags.push(["e", parentAnchor, "", "reply"])
         }
     }
+    if (t.length > 0) {ndkEvent.tags.push(t)}
+    if (d.length > 0) {ndkEvent.tags.push(d)}
+    ndkEvent.tags.push(["op", "nostrocket.problem.create"])
     return ndkEvent
 }
