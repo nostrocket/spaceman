@@ -6,6 +6,8 @@ import {makeTags} from "../helpers/tags.js";
 import {waitForKind0Ready,getKind0Object,kind0Objects} from "./kind0.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
+
+
 export function updateAccountDetails() {
     let form = document.createElement("div")
     form.appendChild(usernameAndBioForm())
@@ -68,7 +70,6 @@ function bioButtons(onclick) {
 function createUsernameAndBioForm(haveExistingKind0,username){
     let div = document.createElement("div")
     div.id = window.spaceman.pubkey
-    div.appendChild(paidRelayNotice())
     div.appendChild(makeH3("Create or modify your Nostrocket Permanym"))
     div.appendChild(makeParagraph("* The first step to joining the Identity Tree is to set your Permanym   " +
         "\n* You SHOULD use your existing Nostr pubkey so that existing Nostrocketers can see that you're not a spammer or bad actor   " +
@@ -80,13 +81,14 @@ function createUsernameAndBioForm(haveExistingKind0,username){
         div.appendChild(makeParagraph("### Found a Kind 0 event for your pubkey: \nSubmit this form to claim *" + kind0Objects.get(window.spaceman.pubkey).name + "* now."))
     }
     div.appendChild(makeTextInput("Permanym", "Permanym", "name input", 20, username))
+    div.appendChild(paidRelayNotice())
     return div
 }
 
 function paidRelayNotice() {
     let div = document.createElement("div")
     div.className = "notice"
-    div.appendChild(makeParagraph("You MUST be a member of the Nostrocket paid relay to publish events.   " +
+    div.appendChild(makeParagraph("You MUST be a member of the Nostrocket paid relay `wss://nostr.688.org` to publish events here.   " +
         "\nThis is to prevent spam, and one day it might be enough sats to pay for relay upkeep.   " +
         "\nThe fee is currently 1000 sats for 2016 blocks."))
     div.appendChild(makeLink("https://nostr.688.org/join", "Click here to join the relay now"))
