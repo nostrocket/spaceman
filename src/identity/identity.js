@@ -10,8 +10,11 @@ import {getKind0Object, kind0Objects, waitForKind0Ready} from "./kind0.js";
 
 export default function renderIdentityLayout() {
     state.waitForStateReady(()=>{
+        if (!window.spaceman.pubkey) {
+            window.spaceman.pubkey = ""
+            alert("You can look but you can't touch. Please install a NIP-07 nostr signing browser extension (such as GetAlby or Nos2x) if you want to interact with Nostrocket!")
+        }
         let orderedIdentities = []
-
         state.identities().forEach(x => {
            orderedIdentities.push(x)
         })

@@ -113,6 +113,9 @@ function usernameAndBioForm() {
     let haveExistingKind0 = false
     let pubkeyId = identities().filter(item => item.Account === window.spaceman.pubkey)
     if (pubkeyId.length === 0) {
+        if (!window.spaceman.pubkey) {
+            alert("coudn't find your nostr pubkey, do you have a nostr signing extension (e.g. Alby) installed?")
+        }
         // no existing identity, try to get kind0 from other relays
         getKind0Object(window.spaceman.pubkey,["wss://relay.damus.io"])
         waitForKind0Ready(function(){
