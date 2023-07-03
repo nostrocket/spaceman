@@ -31,7 +31,7 @@ export function beginListeningForEvents() {
             if (event.kind === 641804 || event.kind === 1) {
                 enmapReply(event)
             }
-            if (event.kind === 10310) {
+            if (event.kind === 10311) {
                 console.log(event)
                 if (event.pubkey === window.spaceman.ignition_account || event.pubkey === window.spaceman.pubkey) {
                     //todo this should check for current pubkey || any pubkey with votepower > x

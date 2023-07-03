@@ -142,17 +142,18 @@ function usernameAndBioForm() {
 
 async function setBio(name) {
     if (name.length > 0) {
-        let content = JSON.stringify({name: name})
+        let content = "I'm requesting to join the Nostrocket Identity Tree and claiming my permanym: " + name
         let tags = makeTags(window.spaceman.pubkey, "identity")
         let ndkEvent = new NDKEvent(ndk);
-        ndkEvent.kind = 640400
+        ndkEvent.kind = 1
         ndkEvent.content = content
+        tags.push(["op", "nostrocket.identity.permanym", name])
         ndkEvent.tags = tags
         await ndkEvent.publish().catch(x => {
             console.log(x)
         })
         console.log(ndkEvent.rawEvent())
     } else {
-        console.log("username and bio can't both be empty")
+        console.log("permanym can't be empty")
     }
 }

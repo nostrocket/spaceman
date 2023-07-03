@@ -130,15 +130,16 @@ function createAddButton(identity,onclick) {
 
     // Add an event listener to the button
     button.onclick = function () {
+        let failed = true
         if (state.pubkeyInIdentity(window.spaceman.pubkey)) {
             const USH = state.identities().find(x => x.Account === window.spaceman.pubkey).UniqueSovereignBy
             if (USH != null && USH !== '') {
-                addToIdentityTree(identity.Account)
-            } else {
-                alert("You need to be at Identity Tree first to add others identity.")
+                failed = false
+                addToIdentityTree(identity.Account, identity.PermanymEventID)
             }
-        } else {
-            alert("You need to be at Identity Tree first to add others identity.")
+        }
+        if (failed) {
+            alert("You need to be in the Identity Tree first to add others identity.")
         }
 
     }
@@ -147,13 +148,15 @@ function createAddButton(identity,onclick) {
     return button;
 }
 
-async function addToIdentityTree(account) {
+async function addToIdentityTree(account, requestingEventID) {
     let content;
-    content = JSON.stringify({target: account, maintainer: false, ush: true, character: false})
+    content = "I've added you to the Identity Tree. Welcome to Nostrocket! 🫂"//JSON.stringify({target: account, maintainer: false, ush: true, character: false})
     let tags;
     tags = makeTags(window.spaceman.pubkey, "identity")
+    tags.push(["op", "nostrocket.identity.ush", account])
+    tags.push(["e", requestingEventID, "", "reply"])
     let ndkEvent = new NDKEvent(ndk);
-    ndkEvent.kind = 640402
+    ndkEvent.kind = 1
     ndkEvent.content = content
     ndkEvent.tags = tags
     await ndkEvent.publish()
