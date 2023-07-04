@@ -12,6 +12,7 @@ import * as nt from 'nostr-tools';
 import {generateKeyPair} from "crypto";
 import {beginListeningForEvents} from "./src/helpers/events";
 import "@fontsource/ubuntu/700.css";
+import {loading} from "./src/helpers/loading";
 console.log(14)
 declare global {
     interface Window { spaceman: any; }
@@ -167,3 +168,4 @@ window.spaceman.Functions.sendEvent = (e) => {
 }
 
 beginListeningForEvents()
+document.getElementById("content").replaceChildren(loading())

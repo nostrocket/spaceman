@@ -5,6 +5,7 @@ export function loading() {
     let image = document.createElement("img")
     image.src = 'loading.gif'
     let waiting = makeParagraph("Waiting for events...")
+    waiting.appendChild(makeParagraph("Spaceman! A Nostrocket client that works sometimes.\n\nIf something goes wrong, hold down the shift key and refresh the page."))
     box.appendChild(image)
     box.appendChild(waiting)
     return box
