@@ -43,13 +43,15 @@ window.spaceman.CurrentState.ready = false
 window.spaceman.nt = nt
 
 
-export var ndk : NDK|null = null 
-export var nip07signer :  NDKNip07Signer | null= null
+export var ndk : NDK | null = null
+export var nip07signer :  NDKNip07Signer | null = null
 async function initializeNDK() {
 
     //let events;
     try {
+        console.log(52)
         nip07signer = await new NDKNip07Signer();
+        console.log(54)
         ndk = new NDK({signer: nip07signer, explicitRelayUrls: ["wss://nostr.688.org", "wss://relay.damus.io"]});
         ndk.connect();
         // let filter: NDKFilter = {tags: [["#e", window.spaceman.rootevents.IgnitionEvent]]}

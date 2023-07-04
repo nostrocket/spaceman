@@ -1,4 +1,4 @@
-import {identities} from "../state/state.js";
+import {identities, waitForStateReady} from "../state/state.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {makeH3, makeLink, makeParagraph, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
@@ -6,27 +6,33 @@ import {makeTags} from "../helpers/tags.js";
 import {waitForKind0Ready,getKind0Object,kind0Objects} from "./kind0.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
+import {loading} from "../helpers/loading.js";
 
 
 export function updateAccountDetails() {
     let form = document.createElement("div")
-    form.appendChild(usernameAndBioForm())
-    form.appendChild(bioButtons(function () {
-        if (document.getElementById( 'name input' ).valueOf().readOnly) {
-            setBio( document.getElementById( 'name input' ).value)
-            //location.reload()
-        } else {
-            validateUnique(document.getElementById( 'name input' ).value).then(res => {
-                if (res) {
-                    setBio( document.getElementById( 'name input' ).value)
-                    //location.reload()
-                } else {
-                    alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
-                }
-            })
-        }
+    let waiting = loading()
+    form.appendChild(waiting)
+    waitForStateReady(() => {
+        waiting.remove()
+        form.appendChild(usernameAndBioForm())
+        form.appendChild(bioButtons(function () {
+            if (document.getElementById( 'name input' ).valueOf().readOnly) {
+                setBio( document.getElementById( 'name input' ).value)
+                //location.reload()
+            } else {
+                validateUnique(document.getElementById( 'name input' ).value).then(res => {
+                    if (res) {
+                        setBio( document.getElementById( 'name input' ).value)
+                        //location.reload()
+                    } else {
+                        alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
+                    }
+                })
+            }
 
-    }))
+        }))
+    })
     return form
 }
 
