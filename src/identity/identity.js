@@ -100,7 +100,7 @@ function makeIdentityLayout(){
     let joinButton = document.createElement("button")
     joinButton.innerText = "Request to join"
     joinButton.onclick = () => {
-        document.getElementById('content').replaceChildren(window.spaceman.updateAccountDetails())
+        window.spaceman.Views.joinIdentityTree()
     }
     left.appendChild(joinButton)
     left.appendChild(makeLinkWithOnclick(

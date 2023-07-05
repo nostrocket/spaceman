@@ -11,16 +11,12 @@
   <div id="container">
     <div id="top">
       <a href="#" onclick="document.getElementById('content').replaceChildren(window.spaceman.newMirv())">Launch A New Rocket</a> |
-      <a href="#" onclick="document.getElementById('content').replaceChildren(window.spaceman.updateAccountDetails())">Update Account Details</a> |
-      <a href="#" onclick="document.getElementById('content').replaceChildren(window.spaceman.renderIdentity())">Identity Tree</a> |
+      <a href="#" onclick="window.spaceman.Views.joinIdentityTree()">Update Account Details</a> |
+      <a href="#" onclick="window.spaceman.Views.identityTree()">Identity Tree</a> |
       <a href="#" onclick="document.getElementById('content').replaceChildren(window.spaceman.Functions.problemsFromState())">Problem Tracker</a> |
       <div id="pubkey">WAITING FOR PUBKEY</div>
     </div>
-    <div id = "content">
-      <p><img src="/loading.gif" /><br />WAITING FOR EVENTS</p>
-
-
-    </div>
+    <div id = "content"></div>
   </div>
 
 

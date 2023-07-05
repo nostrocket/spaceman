@@ -17,8 +17,8 @@ export function beginListeningForEvents() {
             [
                 {
                     //tags: [['#e', 'fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c']]
-                    "#e": window.spaceman.rootevents.IgnitionEvent
-                    //kinds: [10310]
+                    "#e": window.spaceman.rootevents.IgnitionEvent,
+                    kinds: [10311]
                     // authors: [
                     //     "b4f36e2a63792324a92f3b7d973fcc33eaa7720aaeee71729ac74d7ba7677675"
                     //     //NostrTools.nip19.decode("npub1mygerccwqpzyh9pvp6pv44rskv40zutkfs38t0hqhkvnwlhagp6s3psn5p").data
@@ -28,7 +28,7 @@ export function beginListeningForEvents() {
         )
 
         sub.on('event', event => {
-            if (event.kind === 641804 || event.kind === 1) {
+            if (event.kind === 1) {
                 enmapReply(event)
             }
             if (event.kind === 10311) {
@@ -36,8 +36,9 @@ export function beginListeningForEvents() {
                 if (event.pubkey === window.spaceman.ignition_account || event.pubkey === window.spaceman.pubkey) {
                     //todo this should check for current pubkey || any pubkey with votepower > x
                     state.enMapState(event)
-                    document.getElementById("content").replaceChildren()
-                    document.getElementById("content").appendChild(renderIdentityLayout())
+                    window.spaceman.Views.identityTree()
+                    // document.getElementById("content").replaceChildren()
+                    // document.getElementById("content").appendChild(renderIdentityLayout())
                     if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey]) {
                         if (window.spaceman.CurrentState.state.identity[window.spaceman.pubkey].Name) {
                             if (document.getElementById("pubkey")) {

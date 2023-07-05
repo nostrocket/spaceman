@@ -1,4 +1,4 @@
-import {identities, waitForStateReady} from "../state/state.js";
+import {identities, waitForStateReady, waitForStateReadyPromise} from "../state/state.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {makeH3, makeLink, makeParagraph, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
@@ -10,30 +10,30 @@ import {loading} from "../helpers/loading.js";
 
 
 export function updateAccountDetails() {
+    let box = document.createElement("div")
+    // let waiting = loading()
+    // box.appendChild(waiting)
     let form = document.createElement("div")
-    let waiting = loading()
-    form.appendChild(waiting)
-    waitForStateReady(() => {
-        waiting.remove()
-        form.appendChild(usernameAndBioForm())
-        form.appendChild(bioButtons(function () {
-            if (document.getElementById( 'name input' ).valueOf().readOnly) {
-                setBio( document.getElementById( 'name input' ).value)
-                //location.reload()
-            } else {
-                validateUnique(document.getElementById( 'name input' ).value).then(res => {
-                    if (res) {
-                        setBio( document.getElementById( 'name input' ).value)
-                        //location.reload()
-                    } else {
-                        alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
-                    }
-                })
-            }
+    form.appendChild(usernameAndBioForm())
+    form.appendChild(bioButtons(function () {
+        if (document.getElementById( 'name input' ).valueOf().readOnly) {
+            setBio( document.getElementById( 'name input' ).value)
+            //location.reload()
+        } else {
+            validateUnique(document.getElementById( 'name input' ).value).then(res => {
+                if (res) {
+                    setBio( document.getElementById( 'name input' ).value)
+                    //location.reload()
+                } else {
+                    alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
+                }
+            })
+        }
 
-        }))
-    })
-    return form
+    }))
+    box.appendChild(form)
+    box.appendChild(paidRelayNotice())
+    return box
 }
 
 async function validateUnique(name) {
@@ -76,18 +76,20 @@ function bioButtons(onclick) {
 function createUsernameAndBioForm(haveExistingKind0,username){
     let div = document.createElement("div")
     div.id = window.spaceman.pubkey
-    div.appendChild(makeH3("Create or modify your Nostrocket Permanym"))
+    div.appendChild(makeH3("Create your Nostrocket Permanym"))
     div.appendChild(makeParagraph("* The first step to joining the Identity Tree is to set your Permanym   " +
         "\n* You SHOULD use your existing Nostr pubkey so that existing Nostrocketers can see that you're not a spammer or bad actor   " +
         "\n* Nostrocket permanyms **cannot** be changed once set for your Pubkey   " +
         "\n* Nostrocket permanyms **must** be unique   " +
         "\n* Nostrocket will display your latest Nostr `Kind 0` data, but your Identity Tree permanym will be never change once it is set   " +
         "\n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
+    let kind0 = document.createElement("div")
+    kind0.appendChild(loading(true, makeParagraph("Searching relays for your pubkey and profile data...")))
     if (haveExistingKind0) {
-        div.appendChild(makeParagraph("### Found a Kind 0 event for your pubkey: \nSubmit this form to claim *" + kind0Objects.get(window.spaceman.pubkey).name + "* now."))
+        kind0.replaceChildren(makeParagraph("### Found a Kind 0 event for your pubkey: \nSubmit this form to claim **" + kind0Objects.get(window.spaceman.pubkey).name + "** now."))
     }
+    div.appendChild(kind0)
     div.appendChild(makeTextInput("Permanym", "Permanym", "name input", 20, username))
-    div.appendChild(paidRelayNotice())
     return div
 }
 
@@ -102,18 +104,6 @@ function paidRelayNotice() {
     return div
 }
 
-// function updateUsernameAndBioForm(div,haveExistingKind0,username,about){
-//     div.innerHTML = ""
-//     div.appendChild(makeH3("Create or modify your Nostrocket profile"))
-//     div.appendChild(makeParagraph("* Nostrocket usernames **cannot** be changed once set for your Pubkey   \n* Nostrocket usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
-//     if (haveExistingKind0) {
-//         div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(window.spaceman.pubkey).name + "**_ now."))
-//     }
-//     div.appendChild(makeTextInput("Username", "Name or Pseudonym", "name input", 20, username))
-//
-//     div.appendChild(makeTextField("About Me", "Introduce yourself to the community", "about input", 560, about))
-//     return div
-// }
 function usernameAndBioForm() {
     let username = ""
     let haveExistingKind0 = false
@@ -130,13 +120,6 @@ function usernameAndBioForm() {
                     username = kind0Objects.get(window.spaceman.pubkey).name
                     haveExistingKind0 = true
                 }
-                // if (kind0Objects.get(window.spaceman.pubkey).about) {
-                //     if (kind0Objects.get(window.spaceman.pubkey).about.length > 0) {
-                //         about = kind0Objects.get(window.spaceman.pubkey).about
-                //         haveExistingKind0 = true
-                //     }
-                // }
-
                 document.getElementById(window.spaceman.pubkey).replaceChildren(createUsernameAndBioForm(haveExistingKind0,username))
             }
         })
@@ -148,8 +131,6 @@ function usernameAndBioForm() {
     }
     return createUsernameAndBioForm(haveExistingKind0,username)
 }
-
-
 
 async function setBio(name) {
     if (name.length > 0) {

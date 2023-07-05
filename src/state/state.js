@@ -7,6 +7,12 @@ export function waitForStateReady(callback) {
     }, 200);
 }
 
+export const waitForStateReadyPromise = new Promise((resolve, reject) => {
+    waitForStateReady(() => {
+        resolve()
+    })
+})
+
 export function enMapState(e) {
     console.log()
     let state;

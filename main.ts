@@ -13,6 +13,7 @@ import {generateKeyPair} from "crypto";
 import {beginListeningForEvents} from "./src/helpers/events";
 import "@fontsource/ubuntu/700.css";
 import {loading} from "./src/helpers/loading";
+import {waitForStateReadyPromise} from "./src/state/state";
 console.log(14)
 declare global {
     interface Window { spaceman: any; }
@@ -26,6 +27,18 @@ window.spaceman.Functions.problemsFromState = createProblemsFromState
 window.spaceman.renderIdentity = renderIdentities
 window.spaceman.newMirv = newMirv
 window.spaceman.updateAccountDetails = updateAccountDetails
+
+window.spaceman.Views = {}
+window.spaceman.Views.identityTree = () => {
+    waitForStateReadyPromise.then(()=>{
+        document.getElementById("content").replaceChildren(renderIdentities())
+    })
+}
+window.spaceman.Views.joinIdentityTree = () => {
+    waitForStateReadyPromise.then(()=>{
+        document.getElementById("content").replaceChildren(updateAccountDetails())
+    })
+}
 
 window.spaceman.ignition_account = "546b4d7f86fe2c1fcc7eb10bf96c2eaef1daa26c67dad348ff0e9c853ffe8882"
 
@@ -169,3 +182,4 @@ window.spaceman.Functions.sendEvent = (e) => {
 
 beginListeningForEvents()
 document.getElementById("content").replaceChildren(loading())
+
