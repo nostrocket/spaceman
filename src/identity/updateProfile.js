@@ -11,28 +11,35 @@ import {loading} from "../helpers/loading.js";
 
 export function updateAccountDetails() {
     let box = document.createElement("div")
-    // let waiting = loading()
-    // box.appendChild(waiting)
-    let form = document.createElement("div")
-    form.appendChild(usernameAndBioForm())
-    form.appendChild(bioButtons(function () {
-        if (document.getElementById( 'name input' ).valueOf().readOnly) {
-            setBio( document.getElementById( 'name input' ).value)
-            //location.reload()
-        } else {
-            validateUnique(document.getElementById( 'name input' ).value).then(res => {
-                if (res) {
+    if (window.spaceman.pubkey) {
+        let accountState = identities().filter(item => item.Account === window.spaceman.pubkey)
+        if (accountState.length === 0) {
+            let form = document.createElement("div")
+            form.appendChild(usernameAndBioForm())
+            form.appendChild(bioButtons(function () {
+                if (document.getElementById( 'name input' ).valueOf().readOnly) {
                     setBio( document.getElementById( 'name input' ).value)
                     //location.reload()
                 } else {
-                    alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
+                    validateUnique(document.getElementById( 'name input' ).value).then(res => {
+                        if (res) {
+                            setBio( document.getElementById( 'name input' ).value)
+                            //location.reload()
+                        } else {
+                            alert(document.getElementById( 'name input' ).value + " has been taken, please try another username")
+                        }
+                    })
                 }
-            })
-        }
 
-    }))
-    box.appendChild(form)
-    box.appendChild(paidRelayNotice())
+            }))
+            box.appendChild(form)
+            box.appendChild(paidRelayNotice())
+    }
+        if (accountState.length > 0) {
+            console.log(accountState)
+            box.appendChild(makeParagraph("### You already have a Permanym: " + accountState[0].Name))
+        }
+    }
     return box
 }
 
