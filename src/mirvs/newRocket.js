@@ -8,7 +8,7 @@ import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
 import "./mirv.css"
 
-export function newMirv() {
+export function newRocket() {
     let div = document.createElement("div")
     //div.appendChild(makeParagraph("A Mirv is an independently targetable rocket. This feature isn't ready yet."))
     let form = document.createElement("div")

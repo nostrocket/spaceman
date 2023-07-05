@@ -4,7 +4,7 @@ import renderIdentities from './src/identity/identity.js'
 
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
-import {newMirv} from "./src/mirvs/newMirv.js";
+import {newRocket} from "./src/mirvs/newRocket.js";
 import {updateAccountDetails} from "./src/identity/updateProfile.js";
 import {createProblemsFromState} from "./src/problems/problemsFromState.js"
 import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-dev-kit/ndk";
@@ -21,22 +21,30 @@ declare global {
 export {};
 
 window.spaceman = {}
-
 window.spaceman.Functions = {}
-window.spaceman.Functions.problemsFromState = createProblemsFromState
-window.spaceman.renderIdentity = renderIdentities
-window.spaceman.newMirv = newMirv
-window.spaceman.updateAccountDetails = updateAccountDetails
-
 window.spaceman.Views = {}
+
 window.spaceman.Views.identityTree = () => {
     waitForStateReadyPromise.then(()=>{
         document.getElementById("content").replaceChildren(renderIdentities())
     })
 }
+
 window.spaceman.Views.joinIdentityTree = () => {
     waitForStateReadyPromise.then(()=>{
         document.getElementById("content").replaceChildren(updateAccountDetails())
+    })
+}
+
+window.spaceman.Views.createNewRocket = () => {
+    waitForStateReadyPromise.then(()=>{
+        document.getElementById("content").replaceChildren(newRocket())
+    })
+}
+
+window.spaceman.Views.problemTracker = () => {
+    waitForStateReadyPromise.then(()=>{
+        document.getElementById("content").replaceChildren(createProblemsFromState())
     })
 }
 
