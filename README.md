@@ -7,7 +7,7 @@ Nostrocket Engine subscribes to the Nostrocket Ignition Tree, all events in this
 - the event Kind and Tags
 - the location of the event in the Ignition Tree (which branch of the tree the event is in)
 
-The Nostrocket Engine currently runs separately to the Nostrocket Client (Spaceman). It executes on the OS rather than within the browser. It publishes the *current state* as a *replaceable event* signed by whoever is running it (SHOULD be the same person who's using Spaceman but doesn't have to be).   
+The Nostrocket Engine currently runs separately to the Nostrocket Client (Spaceman). It executes on the OS rather than within the browser. It publishes the *current state* as a *replaceable event* of `kind 10311` and signed by whoever is running the Engine (SHOULD be the same person who's using Spaceman but doesn't have to be).   
 
 Ultimately, this extra step of publishing the current state as an event is fine as a prototype but is clunky and will become redundant if the project works. The Engine should be implemented in Rust and compiled to wasm such that the whole thing can run in a browser and just use `WebAssembly.Memory` to store and share the current state locally in the browser. It could possibly be done in plain TS/JS but: 1) it would probably become pretty slow, and 2) I'd rather self immolate.
 
