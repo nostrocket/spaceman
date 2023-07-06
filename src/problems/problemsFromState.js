@@ -7,7 +7,7 @@ import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {addReplayProtection} from "../helpers/tags.js";
 import {beginListeningForComments, createElementAllComments} from "./comments.js";
 import {enmapReply} from "./events.js";
-
+import { nip19 } from "nostr-tools";
 export function createProblemsFromState() {
     let div = document.createElement("div")
     div.id = "problems"
@@ -123,7 +123,7 @@ function createElementProblemAnchor(problem, preview) {
                 }
             }))
             actionBox.appendChild(spacer("|"))
-
+            
             //CLAIM
             if (problem.ClaimedBy === "" && !problem.Closed) {
                 actionBox.appendChild(makeLinkWithOnclick("claim", ()=>{
@@ -234,7 +234,23 @@ function createElementProblemAnchor(problem, preview) {
             //PRINT TO CONSOLE
             actionBox.appendChild(makeLinkWithOnclick("print", ()=>{
                 console.log(problem)
+                
             }))
+            actionBox.appendChild(spacer("|"))
+            //SHARE
+            if (problem.ClaimedBy === "" && !problem.Closed) {
+                actionBox.appendChild(makeLinkWithOnclick("share", ()=>{
+                    // navigator.clipboard.writeText('a').then(function(x) {
+                    //     alert("Link copied to clipboard: " + 'a');
+                    //   });
+                    alert("Copied to clipboard.");
+                    navigator.clipboard.writeText("a sample text!");
+                    // navigator.clipboard.writeText("https://snort.social/e/"+nip19.noteEncode(problem.UID));
+                    window.open("https://snort.social/e/"+nip19.noteEncode(problem.UID))
+                }))
+               
+            }
+            
             //actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem, spacer("|"), printToConsole)
         }
         d.append(p, actionBox, c)
