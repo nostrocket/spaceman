@@ -248,7 +248,7 @@ function renderTree(data, root) {
         const children = data.filter(child => child.UniqueSovereignBy === root.Account);
         if (children.length > 0) {
             result += '<ul>';
-            children.forEach(child => {
+            children.reverse().forEach(child => {
                 result += renderTree(data, child);
             });
             result += '</ul>';
