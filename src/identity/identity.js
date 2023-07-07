@@ -19,7 +19,7 @@ export default function renderIdentityLayout() {
            orderedIdentities.push(x)
         })
         orderedIdentities.sort(compareOrder)
-        orderedIdentities.forEach(i => {
+        orderedIdentities.reverse().forEach(i => {
             if (i.Name.length > 0) {
 
                 if (i.UniqueSovereignBy === null || i.UniqueSovereignBy === '') {
