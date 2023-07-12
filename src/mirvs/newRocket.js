@@ -20,20 +20,23 @@ export function newRocket() {
     let b = document.createElement("button")
     b.innerText = "Do it!"
     b.onclick = function () {
-        alert("this feature isn't ready yet")
-        // newMirvName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value).then(x => {
-        //     newMirvCapTable(document.getElementById( 'name input' ).value, x).then(() => {
-        //         console.log()
-        //     })
-        // })
-
+        //alert("this feature isn't ready yet")
+        let newRocketEvent = eventRocketName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value)
+        console.log(newRocketEvent)
+        newRocketEvent.publish().then(x => {
+            console.log(x)
+            }
+        )
     }
     form.appendChild(b)
     waitForStateReady(()=>{
-        Object.values(window.spaceman.CurrentState.state.mirvs).forEach(m => {
-            console.log(m)
-            form.appendChild(createElementMirv(m))
-        })
+        if (window.spaceman.CurrentState.state.rockets) {
+            Object.values(window.spaceman.CurrentState.state.rockets).forEach(m => {
+                console.log(m)
+                form.appendChild(createElementMirv(m))
+            })
+        }
+
         // Object.keys(window.spaceman.CurrentState.state.shares).forEach(s => {
         //     div.append(createElementMirv(s))
         // })
@@ -78,9 +81,14 @@ function createElementMirv(mirv){
     return s
 }
 
-async function newMirvName(name, problem) {
-    if (!window.spaceman.CurrentState.state.problems[problem]) {
+function eventRocketName(name, problem) {
+    let existingProblem = window.spaceman.CurrentState.state.problems[problem]
+    if (!existingProblem) {
         alert("invalid problem")
+        return
+    }
+    if (existingProblem.CreatedBy !== window.spaceman.pubkey) {
+        alert("you must be the creator of this problem to create a new Rocket for it")
         return
     }
 
@@ -88,16 +96,17 @@ async function newMirvName(name, problem) {
         alert("name too short")
         return
     }
-        let content;
-        content = JSON.stringify({rocket_id: name, problem_id: problem})
         let tags;
         tags = makeTags(window.spaceman.pubkey, "mirvs")
+        tags.push(["e", problem, "", "reply"]);
+        tags.push(["op", "nostrocket.rockets.register", name])
         let ndkEvent = new NDKEvent(ndk);
-        ndkEvent.kind = 640600
-        ndkEvent.content = content
+        ndkEvent.kind = 1
+        ndkEvent.content = "I'm launching a new Rocket to resolve problem " + problem + ". I'm calling this rocket: " + name + "!"
         ndkEvent.tags = tags
-        await ndkEvent.publish()
-        return ndkEvent.id
+        return ndkEvent
+        //await ndkEvent.publish()
+        //return ndkEvent.id
 }
 
 async function newMirvCapTable(name, r) {

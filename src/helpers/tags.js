@@ -22,7 +22,7 @@ export function addReplayProtection(pubkey, tags, r) {
                 return tags
             }
         }
-        tags.push(["r", window.spaceman.rootevents.ReplayRoot, "", "reply"])
+        tags.push(["r", window.spaceman.rootevents.ReplayRoot])//, "", "reply"])
     }
     if (r) {
         tags.push(["r", r, "", "reply"])
