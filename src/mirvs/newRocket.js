@@ -10,7 +10,7 @@ import "./mirv.css"
 
 export function newRocket() {
     let div = document.createElement("div")
-    //div.appendChild(makeParagraph("A Mirv is an independently targetable rocket. This feature isn't ready yet."))
+    div.style.maxWidth = "800px"
     let form = document.createElement("div")
     form.className = "new_mirv"
     form.appendChild(makeH3("Let's go"))
@@ -20,8 +20,23 @@ export function newRocket() {
     let b = document.createElement("button")
     b.innerText = "Do it!"
     b.onclick = function () {
-        //alert("this feature isn't ready yet")
-        let newRocketEvent = eventRocketName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value)
+        let problem = document.getElementById( 'problem input' ).value
+        let name = document.getElementById( 'name input' ).value
+        let existingProblem = window.spaceman.CurrentState.state.problems[problem]
+        if (!existingProblem) {
+            alert("invalid problem")
+            return
+        }
+        if (existingProblem.CreatedBy !== window.spaceman.pubkey) {
+            alert("you must be the creator of this problem to create a new Rocket for it")
+            return
+        }
+
+        if (name.length < 4) {
+            alert("name too short")
+            return
+        }
+        let newRocketEvent = eventRocketName(name, problem)
         console.log(newRocketEvent)
         newRocketEvent.publish().then(x => {
             console.log(x)
@@ -33,7 +48,7 @@ export function newRocket() {
         if (window.spaceman.CurrentState.state.rockets) {
             Object.values(window.spaceman.CurrentState.state.rockets).forEach(m => {
                 console.log(m)
-                form.appendChild(createElementMirv(m))
+                div.appendChild(createElementRocket(m))
             })
         }
 
@@ -55,19 +70,31 @@ export function newRocket() {
     return div
 }
 
-function createElementMirv(mirv){
+function createElementRocket(rocket){
     let s = document.createElement("div")
-    s.className = "mirv"
-    s.id = mirv.RocketID
-    let mirvInfoFromShares = window.spaceman.CurrentState.state.shares[mirv.RocketID]
-    // console.log(mirvInfo)
-    s.appendChild(makeH3(mirv.RocketID))
-    s.appendChild(makeItem("Created By",getIdentityByAccount(mirv.CreatedBy).Name))
-
-    if (mirvInfoFromShares) {
-        for (let account in mirvInfoFromShares) {
-            let cap = mirvInfoFromShares[account]
-            s.appendChild(makeItem("Name",getIdentityByAccount(mirv.CreatedBy).Name))
+    s.className = "new_mirv"
+    s.id = rocket.RocketUID
+    let rocketMerits;
+    if (window.spaceman.CurrentState.state.merits) {
+        rocketMerits = window.spaceman.CurrentState.state.merits[rocket.RocketUID]
+    }
+    let problem;
+    if (window.spaceman.CurrentState.state.problems) {
+        problem = window.spaceman.CurrentState.state.problems[rocket.ProblemID]
+    }
+    s.appendChild(makeH3(rocket.RocketName))
+    let createdByElement = makeItem("Created By",getIdentityByAccount(rocket.CreatedBy).Name);
+    createdByElement.className = "datapoint"
+    s.appendChild(createdByElement)
+    if (problem) {
+        let problemElement = makeItem("Created in response to ", problem.Title);
+        problemElement.className = "datapoint"
+        s.appendChild(problemElement)
+    }
+    if (rocketMerits) {
+        for (let account in rocketMerits) {
+            let cap = rocketMerits[account]
+            s.appendChild(makeItem("Name",getIdentityByAccount(rocket.CreatedBy).Name))
             s.appendChild(makeItem("Last Lt Change", cap.LastLtChange))
             s.appendChild(makeItem("Lead Time", cap.LeadTime))
             s.appendChild(makeItem("Lead Time Locked Shares", cap.LeadTimeLockedShares))
@@ -75,27 +102,14 @@ function createElementMirv(mirv){
             s.appendChild(makeItem("OP Return Addresses", cap.OpReturnAddresses))
         }
     } else {
-        s.appendChild(makeText("This MIRV does not yet have a cap table"))
+        s.appendChild(makeText("No merits have been created under this rocket (yet)"))
     }
 
     return s
 }
 
 function eventRocketName(name, problem) {
-    let existingProblem = window.spaceman.CurrentState.state.problems[problem]
-    if (!existingProblem) {
-        alert("invalid problem")
-        return
-    }
-    if (existingProblem.CreatedBy !== window.spaceman.pubkey) {
-        alert("you must be the creator of this problem to create a new Rocket for it")
-        return
-    }
 
-    if (name.length < 4) {
-        alert("name too short")
-        return
-    }
         let tags;
         tags = makeTags(window.spaceman.pubkey, "mirvs")
         tags.push(["e", problem, "", "reply"]);

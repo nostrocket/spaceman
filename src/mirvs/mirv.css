@@ -13,6 +13,12 @@
     border-width: medium;
     background-color: rgb(44, 14, 87);
     margin: 1%;
-    padding: 1%;
-    max-width: 600px;
+    padding-left: 1%;
+    padding-right: 2%;
+    padding-bottom: 1%;
+    max-width: 800px;
+}
+
+.datapoint {
+    margin: 1%;
 }
