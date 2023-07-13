@@ -68,9 +68,13 @@ function createElementProblemAnchor(problem, preview) {
         ) {
             d.className += " available"
         }
+        let rocketName = document.createElement("div")
+        rocketName.className = "rocketname"
+        d.appendChild(rocketName)
         let p = document.createElement("div")
         p.id = problem.UID + "_problem"
-        p.appendChild(makeH3(problem.Title))
+        let title = makeH3(problem.Title)
+        p.appendChild(title)
         let bod = document.createElement("div")
         if (preview) {
             if (!problem.Closed) {
@@ -91,6 +95,16 @@ function createElementProblemAnchor(problem, preview) {
         let problemIsClosedAndThisIsAPreview = (preview && problem.Closed)
         if (window.spaceman.CurrentState.state.identity[problem.CreatedBy] && !problemIsClosedAndThisIsAPreview) {
             p.appendChild(makeParagraph("Logged by: " + "[" + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "](" + "https://snort.social/p/"+problem.CreatedBy+")"))
+            if (window.spaceman.CurrentState.state.rockets) {
+                let name = "nostrocket"
+              Object.keys(window.spaceman.CurrentState.state.rockets).forEach(k => {
+                  if (window.spaceman.CurrentState.state.rockets[k].ProblemID === problem.UID) {
+                      name = window.spaceman.CurrentState.state.rockets[k].RocketName
+                      rocketName.className = "rocketname notnostrocket"
+                  }
+              })
+                rocketName.innerText = "🚀" + name + "🚀"
+            }
         }
         if (window.spaceman.CurrentState.state.identity[problem.ClaimedBy] && !problemIsClosedAndThisIsAPreview) {
             let claimedBy = makeItem("Currently being worked on by", window.spaceman.CurrentState.state.identity[problem.ClaimedBy].Name)

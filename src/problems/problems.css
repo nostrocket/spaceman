@@ -84,3 +84,15 @@
     width: 100%;
     min-height: 400px;
 }
+
+.rocketname {
+    display: block;
+    float: right;
+    background-color: rgb(247, 0, 255);
+    padding: 2px;
+    font-weight: bold;
+}
+
+.notnostrocket {
+    background-color: rgb(0, 149, 255);
+}
