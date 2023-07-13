@@ -1,12 +1,12 @@
 import {makeTextInput} from "../helpers/forms.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {waitForStateReady} from "../state/state.js";
-import {makeH3, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
+import {createButton, makeH3, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
 import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
-import "./mirv.css"
+import "./rockets.css"
 
 export function newRocket() {
     let div = document.createElement("div")
@@ -36,7 +36,7 @@ export function newRocket() {
             alert("name too short")
             return
         }
-        let newRocketEvent = eventRocketName(name, problem)
+        let newRocketEvent = eventNewRocketName(name, problem)
         console.log(newRocketEvent)
         newRocketEvent.publish().then(x => {
             console.log(x)
@@ -97,21 +97,29 @@ function createElementRocket(rocket){
             s.appendChild(makeItem("Name",getIdentityByAccount(rocket.CreatedBy).Name))
             s.appendChild(makeItem("Last Lt Change", cap.LastLtChange))
             s.appendChild(makeItem("Lead Time", cap.LeadTime))
-            s.appendChild(makeItem("Lead Time Locked Shares", cap.LeadTimeLockedShares))
-            s.appendChild(makeItem("Lead Time Unlocked Shares", cap.LeadTimeUnlockedShares))
+            s.appendChild(makeItem("Lead Time Locked Merits", cap.LeadTimeLockedMerits))
+            s.appendChild(makeItem("Lead Time Unlocked Merits", cap.LeadTimeUnlockedMerits))
+            s.appendChild(makeItem("Votepower", cap.LeadTimeLockedMerits * cap.LeadTime))
             s.appendChild(makeItem("OP Return Addresses", cap.OpReturnAddresses))
         }
     } else {
         s.appendChild(makeText("No merits have been created under this rocket (yet)"))
+        s.appendChild(createButton("Create Initial Merits", () => {
+            let ndkEvent = eventCreateInitialMerits(rocket.RocketUID, rocket.RocketName)
+            // console.log(rocket)
+            // console.log(ndkEvent)
+            ndkEvent.publish().then(()=>{
+                console.log(ndkEvent.rawEvent())
+            })
+        }))
     }
 
     return s
 }
 
-function eventRocketName(name, problem) {
-
+function eventNewRocketName(name, problem) {
         let tags;
-        tags = makeTags(window.spaceman.pubkey, "mirvs")
+        tags = makeTags(window.spaceman.pubkey, "rockets")
         tags.push(["e", problem, "", "reply"]);
         tags.push(["op", "nostrocket.rockets.register", name])
         let ndkEvent = new NDKEvent(ndk);
@@ -119,8 +127,17 @@ function eventRocketName(name, problem) {
         ndkEvent.content = "I'm launching a new Rocket to resolve problem " + problem + ". I'm calling this rocket: " + name + "!"
         ndkEvent.tags = tags
         return ndkEvent
-        //await ndkEvent.publish()
-        //return ndkEvent.id
+}
+
+function eventCreateInitialMerits(rocketID, rocketName) {
+    let tags;
+    tags = makeTags(window.spaceman.pubkey, "merits")
+    tags.push(["op", "nostrocket.merits.register", rocketID])
+    let ndkEvent = new NDKEvent(ndk);
+    ndkEvent.kind = 1
+    ndkEvent.content = "I'm creating the initial Merits for rocket " + rocketName + "!"
+    ndkEvent.tags = tags
+    return ndkEvent
 }
 
 async function newMirvCapTable(name, r) {

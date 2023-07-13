@@ -4,8 +4,8 @@ export function makeTags(pubkey, type, r){
     let tags = [];
     tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"]]
     if (type === "identity") {tags.push(["e", window.spaceman.rootevents.IdentityRoot, "", "reply"])}
-    if (type === "shares") {tags.push(["e", window.spaceman.rootevents.SharesRoot, "", "reply"])}
-    if (type === "mirvs") {tags.push(["e", window.spaceman.rootevents.MirvsRoot, "", "reply"])}
+    if (type === "merits") {tags.push(["e", window.spaceman.rootevents.Merits, "", "reply"])}
+    if (type === "rockets") {tags.push(["e", window.spaceman.rootevents.MirvsRoot, "", "reply"])}
     tags = addReplayProtection(pubkey, tags, r)
     return tags
 }
@@ -18,7 +18,7 @@ export function addReplayProtection(pubkey, tags, r) {
         if (pubkeyInIdentity(pubkey)){
             let replayTag = getReplayForAccount(pubkey)
             if (replayTag) {
-                tags.push(["r", replayTag, "", "reply"])
+                tags.push(["r", replayTag])//, "", "reply"])
                 return tags
             }
         }
