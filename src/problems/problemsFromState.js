@@ -149,7 +149,7 @@ function createElementProblemAnchor(problem, preview) {
                                     alert("this problem has open children, it cannot be claimed")
                                     return
                                 }
-                            let e = create641804(problem.UID, "claim")
+                            let e = create641804(problem.UID, "claim", problem.Title)
                             e.tags = addReplayProtection("", e.tags)
                             e.publish()
                             console.log(e)
@@ -166,7 +166,7 @@ function createElementProblemAnchor(problem, preview) {
                 && problem.ClaimedBy !== window.spaceman.pubkey
             ) {
                 actionBox.append(makeLinkWithOnclick("force unclaim", ()=>{
-                    sendMetadataUpdate(problem.UID, "abandon")
+                    sendMetadataUpdate(problem.UID, "abandon", problem.Title)
                 }), spacer("|"))
             }
 
@@ -174,7 +174,7 @@ function createElementProblemAnchor(problem, preview) {
             //ABANDON
             if (problem.ClaimedBy === window.spaceman.pubkey) {
                 actionBox.appendChild(makeLinkWithOnclick("abandon", ()=>{
-                    sendMetadataUpdate(problem.UID, "abandon")
+                    sendMetadataUpdate(problem.UID, "abandon", problem.Title)
                 }))
                 actionBox.appendChild(spacer("|"))
             }
@@ -194,7 +194,7 @@ function createElementProblemAnchor(problem, preview) {
                             alert("you must be the problem's creator or a maintainer to close it")
                             return
                         }
-                        sendMetadataUpdate(problem.UID, "close")
+                        sendMetadataUpdate(problem.UID, "close", problem.Title)
                     })
                 )
                 actionBox.appendChild(spacer("|"))
@@ -204,7 +204,7 @@ function createElementProblemAnchor(problem, preview) {
             if (problem.Closed) {
                 actionBox.appendChild(
                     makeLinkWithOnclick("re-open", ()=>{
-                        sendMetadataUpdate(problem.UID, "open")
+                        sendMetadataUpdate(problem.UID, "open", problem.Title)
                     })
                 )
                 actionBox.appendChild(spacer("|"))
@@ -324,17 +324,17 @@ function hasOpenChildren(UID) {
     return false
 }
 
-function sendMetadataUpdate(UID, operation) {
+function sendMetadataUpdate(UID, operation, problemTitle) {
     let e;
     switch (operation) {
         case "abandon":
-            e = create641804(UID, "abandon")
+            e = create641804(UID, "abandon", problemTitle)
             break;
         case "close":
-            e = create641804(UID, "close")
+            e = create641804(UID, "close", problemTitle)
             break;
         case "open":
-            e = create641804(UID, "open")
+            e = create641804(UID, "open", problemTitle)
             break;
     }
     e.tags = addReplayProtection("", e.tags)
@@ -418,10 +418,14 @@ function publish641802(pubkey, anchorID, title, body, parentAnchor) {
 
 }
 
-function create641804(problemID, operation) {
+function create641804(problemID, operation, problemTitle) {
     let ndkEvent = new NDKEvent(ndk);
     ndkEvent.kind = 1
     //ndkEvent.content = operation
+    let message = problemID
+    if (problemTitle) {
+        message = problemTitle
+    }
     ndkEvent.tags = [
         ["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
         ["e", problemID, "", "reply"]
@@ -429,19 +433,19 @@ function create641804(problemID, operation) {
     switch (operation) {
         case "claim":
             ndkEvent.tags.push(["op", "nostrocket.problem.claim", problemID])
-            ndkEvent.content = "I'm claiming problem " + problemID + " on the nostrocket problem tracker so that I can work on it and other people don't duplicate my efforts."
+            ndkEvent.content = "I'm claiming [" + message + "] on the nostrocket problem tracker so that I can work on it and other people don't duplicate my efforts."
             break;
         case "abandon":
             ndkEvent.tags.push(["op", "nostrocket.problem.abandon", problemID])
-            ndkEvent.content = "I previously claimed problem " + problemID + " on the nostrocket problem tracker, but I'm not abandoning it and freeing it up for other people to claim."
+            ndkEvent.content = "I previously claimed [" + message + "] on the nostrocket problem tracker, but I'm not abandoning it and freeing it up for other people to claim."
             break;
         case "close":
             ndkEvent.tags.push(["op", "nostrocket.problem.close", problemID])
-            ndkEvent.content = "I'm closing problem " + problemID + " on the nostrocket problem tracker, it's been resolved or become obsolete."
+            ndkEvent.content = "I'm closing [" + message + "] on the nostrocket problem tracker, it's been resolved or become obsolete."
             break;
         case "open":
             ndkEvent.tags.push(["op", "nostrocket.problem.open", problemID])
-            ndkEvent.content = "Problem " + problemID + " on the nostrocket problem tracker was previously closed but I'm re-opening it because it appears that it isn't resolved."
+            ndkEvent.content = "["+message + "] on the nostrocket problem tracker was previously closed but I'm re-opening it because it appears that it isn't resolved."
             break;
     }
     return ndkEvent
