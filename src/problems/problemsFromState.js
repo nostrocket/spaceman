@@ -151,7 +151,7 @@ function createElementProblemAnchor(problem, preview) {
                                 }
                             let e = create641804(problem.UID, "claim")
                             e.tags = addReplayProtection("", e.tags)
-                            //e.publish()
+                            e.publish()
                             console.log(e)
                         }
                     }
@@ -420,24 +420,28 @@ function publish641802(pubkey, anchorID, title, body, parentAnchor) {
 
 function create641804(problemID, operation) {
     let ndkEvent = new NDKEvent(ndk);
-    ndkEvent.kind = 641804
-    ndkEvent.content = operation
+    ndkEvent.kind = 1
+    //ndkEvent.content = operation
     ndkEvent.tags = [
         ["e", window.spaceman.rootevents.IgnitionEvent, "", "root"],
         ["e", problemID, "", "reply"]
     ]
     switch (operation) {
         case "claim":
-            ndkEvent.tags.push(["claim", "claim"])
+            ndkEvent.tags.push(["op", "nostrocket.problem.claim", problemID])
+            ndkEvent.content = "I'm claiming problem " + problemID + " on the nostrocket problem tracker so that I can work on it and other people don't duplicate my efforts."
             break;
         case "abandon":
-            ndkEvent.tags.push(["claim", "abandon"])
+            ndkEvent.tags.push(["op", "nostrocket.problem.abandon", problemID])
+            ndkEvent.content = "I previously claimed problem " + problemID + " on the nostrocket problem tracker, but I'm not abandoning it and freeing it up for other people to claim."
             break;
         case "close":
-            ndkEvent.tags.push(["close", "close"])
+            ndkEvent.tags.push(["op", "nostrocket.problem.close", problemID])
+            ndkEvent.content = "I'm closing problem " + problemID + " on the nostrocket problem tracker, it's been resolved or become obsolete."
             break;
         case "open":
-            ndkEvent.tags.push(["close", "open"])
+            ndkEvent.tags.push(["op", "nostrocket.problem.open", problemID])
+            ndkEvent.content = "Problem " + problemID + " on the nostrocket problem tracker was previously closed but I'm re-opening it because it appears that it isn't resolved."
             break;
     }
     return ndkEvent
