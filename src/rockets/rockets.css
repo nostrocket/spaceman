@@ -1,6 +1,5 @@
 .mirv {
     border-style: solid;
-    border-color: rgb(250, 122, 11);
     border-width: medium;
     background-color: rgb(44, 14, 87);
     margin: 1%;
@@ -10,8 +9,8 @@
 .new_mirv {
     border-style: solid;
     border-color: rgb(250, 122, 11);
-    border-width: medium;
-    background-color: rgb(44, 14, 87);
+    border-width: thick;
+    background-color: rgba(247, 0, 255, 0.43);
     margin: 1%;
     padding-left: 1%;
     padding-right: 2%;
@@ -45,4 +44,15 @@
     padding-right: 2%;
     padding-bottom: 1%;
     max-width: 600px;
+}
+
+.rocketName {
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+    top: 0;
+    left: -1%;
+    padding: 1%;
+    width: 101%;
 }

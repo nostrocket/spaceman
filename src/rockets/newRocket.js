@@ -1,3 +1,4 @@
+import "./rockets.css"
 import {makeTextInput} from "../helpers/forms.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {waitForStateReady} from "../state/state.js";
@@ -6,7 +7,7 @@ import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
-import "./rockets.css"
+
 
 export function newRocket() {
     let div = document.createElement("div")
@@ -68,7 +69,10 @@ function createElementRocket(rocket){
     if (window.spaceman.CurrentState.state.problems) {
         problem = window.spaceman.CurrentState.state.problems[rocket.ProblemID]
     }
-    s.appendChild(makeH3(rocket.RocketName))
+    let rocketName = document.createElement("div")
+    rocketName.className = "rocketName"
+    rocketName.appendChild(makeH3("🚀"+rocket.RocketName+"🚀"))
+    s.appendChild(rocketName)
     let createdByElement = makeItem("Created By",getIdentityByAccount(rocket.CreatedBy).Name);
     createdByElement.className = "datapoint"
     s.appendChild(createdByElement)
