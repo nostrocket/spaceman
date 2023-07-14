@@ -60,6 +60,13 @@ export function makeH3(title) {
     return h3
 }
 
+export function makeH4(title) {
+    let h3 = document.createElement("h4")
+    h3.className = "is-4"
+    h3.innerText = title
+    return h3
+}
+
 
 export function makeItem(key, value) {
     let d = document.createElement("div")

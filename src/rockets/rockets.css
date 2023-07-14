@@ -22,3 +22,27 @@
 .datapoint {
     margin: 1%;
 }
+
+.meritsdiv {
+    border-style: solid;
+    border-color: rgb(250, 122, 11);
+    border-width: thin;
+    background-color: rgb(44, 14, 87);
+    margin: 1%;
+    padding-left: 1%;
+    padding-right: 2%;
+    padding-bottom: 1%;
+    max-width: 800px;
+}
+
+.meritsbyaccount {
+    border-style: solid;
+    border-color: rgb(250, 122, 11);
+    border-width: thin;
+    background-color: rgb(12, 78, 160);
+    margin: 1%;
+    padding-left: 1%;
+    padding-right: 2%;
+    padding-bottom: 1%;
+    max-width: 600px;
+}

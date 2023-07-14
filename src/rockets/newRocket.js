@@ -1,7 +1,7 @@
 import {makeTextInput} from "../helpers/forms.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {waitForStateReady} from "../state/state.js";
-import {createButton, makeH3, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
+import {createButton, makeH3, makeH4, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
 import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
@@ -51,21 +51,7 @@ export function newRocket() {
                 div.appendChild(createElementRocket(m))
             })
         }
-
-        // Object.keys(window.spaceman.CurrentState.state.shares).forEach(s => {
-        //     div.append(createElementMirv(s))
-        // })
     })
-
-    // let s = shares()
-    // if (s) {
-    //     let  shares = Object.keys(s);
-    //     s.forEach(mirv => {
-    //         // console.log(currentState.identity[account])
-    //         // i.push(currentState.identity[account])
-    //         div.appendChild(makeNewMirv(mirv))
-    //     })
-    // }
     div.appendChild(form)
     return div
 }
@@ -92,15 +78,22 @@ function createElementRocket(rocket){
         s.appendChild(problemElement)
     }
     if (rocketMerits) {
+        let meritsDiv = document.createElement("div")
+        meritsDiv.className = "meritsdiv"
+        meritsDiv.appendChild(makeH3("Merits for " + rocket.RocketName))
         for (let account in rocketMerits) {
             let cap = rocketMerits[account]
-            s.appendChild(makeItem("Name",getIdentityByAccount(rocket.CreatedBy).Name))
-            s.appendChild(makeItem("Last Lt Change", cap.LastLtChange))
-            s.appendChild(makeItem("Lead Time", cap.LeadTime))
-            s.appendChild(makeItem("Lead Time Locked Merits", cap.LeadTimeLockedMerits))
-            s.appendChild(makeItem("Lead Time Unlocked Merits", cap.LeadTimeUnlockedMerits))
-            s.appendChild(makeItem("Votepower", cap.LeadTimeLockedMerits * cap.LeadTime))
-            s.appendChild(makeItem("OP Return Addresses", cap.OpReturnAddresses))
+            let meritsByAccount = document.createElement("div")
+            meritsByAccount.className = "meritsbyaccount"
+            meritsByAccount.appendChild(makeH4(getIdentityByAccount(rocket.CreatedBy).Name))
+            meritsByAccount.appendChild(makeItem("Last Lt Change", cap.LastLtChange))
+            meritsByAccount.appendChild(makeItem("Lead Time", cap.LeadTime))
+            meritsByAccount.appendChild(makeItem("Lead Time Locked Merits", cap.LeadTimeLockedMerits))
+            meritsByAccount.appendChild(makeItem("Lead Time Unlocked Merits", cap.LeadTimeUnlockedMerits))
+            meritsByAccount.appendChild(makeItem("Votepower", cap.LeadTimeLockedMerits * cap.LeadTime))
+            meritsByAccount.appendChild(makeItem("OP Return Addresses", cap.OpReturnAddresses))
+            meritsDiv.appendChild(meritsByAccount)
+            s.appendChild(meritsDiv)
         }
     } else {
         s.appendChild(makeText("No merits have been created under this rocket (yet)"))
