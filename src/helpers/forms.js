@@ -104,9 +104,6 @@ export function makeTextInput(label, placeholder, id, maxlength, existing) {
 }
 
 function makeFormField(label, input) {
-    if (label === "About") {
-        //todo populate from existing data if exists
-    }
     let field;
     field = document.createElement("div")
     field.className = "field"

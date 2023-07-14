@@ -14,7 +14,8 @@ export function newRocket() {
     div.style.maxWidth = "800px"
     let form = document.createElement("div")
     form.className = "new_mirv"
-    form.appendChild(makeH3("Let's go"))
+    form.appendChild(makeH3("Let's fkn go!"))
+    form.appendChild(makeParagraph("Create a new Rocket"))
     form.appendChild(makeTextInput("Name", "Rocket Name", "name input", 20, ""))
     form.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, ""))
     form.appendChild(document.createElement("br"))

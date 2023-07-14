@@ -147,3 +147,7 @@ button:focus-visible {
   margin-bottom: 3%;
   padding: 0.5%;
 }
+
+.label {
+  font-weight: bold;
+}
