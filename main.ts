@@ -5,6 +5,7 @@ import renderIdentities from './src/identity/identity.js'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 import {newRocket} from "./src/rockets/newRocket.js";
+import {newMeritRequest} from "./src/merits/requestMerits.js";
 import {updateAccountDetails} from "./src/identity/updateProfile.js";
 import {createProblemsFromState} from "./src/problems/problemsFromState.js"
 import NDK, {NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription} from "@nostr-dev-kit/ndk";
@@ -23,6 +24,9 @@ export {};
 window.spaceman = {}
 window.spaceman.Functions = {}
 window.spaceman.Views = {}
+
+window.spaceman.Bitcoin = {}
+window.spaceman.Bitcoin.price = 0
 
 window.spaceman.Views.identityTree = () => {
     waitForStateReadyPromise.then(()=>{
@@ -45,6 +49,12 @@ window.spaceman.Views.createNewRocket = () => {
 window.spaceman.Views.problemTracker = () => {
     waitForStateReadyPromise.then(()=>{
         document.getElementById("content").replaceChildren(createProblemsFromState())
+    })
+}
+
+window.spaceman.Views.merits = () => {
+    waitForStateReadyPromise.then(()=>{
+        document.getElementById("content").replaceChildren(newMeritRequest())
     })
 }
 
@@ -188,6 +198,22 @@ window.spaceman.Functions.isValidated = (pubkey: string, type: string) :boolean 
 window.spaceman.Functions.sendEvent = (e) => {
 }
 
+prices()
 beginListeningForEvents()
 document.getElementById("content").replaceChildren(loading())
 
+function prices() {
+    let request = new XMLHttpRequest()
+    request.open("GET","https://blockchain.info/ticker");
+    request.send();request.onload = () => {if(request.status === 200){
+        let data = JSON.parse(request.response)
+        let price = data["USD"]["15m"]
+        if (price) {
+            window.spaceman.Bitcoin.price = price
+            console.log("got USD price")
+        }
+    } else {
+        console.log("Could not get current Bitcoin price in cuck bucks")// if link is broken, output will be page not found
+    }
+    }
+}

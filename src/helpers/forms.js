@@ -1,5 +1,6 @@
 import {identities} from "../state/state.js";
 
+
 export function makeTextField(label, placeholder, id, maxlength, existing) {
     let input;
     input = document.createElement("textarea")
@@ -87,9 +88,9 @@ export function makeTextInput(label, placeholder, id, maxlength, existing) {
                 warn.innerText = "must be a number!"
                 warn.style.display = "block"
             } else {
-                if (USD) {
+                if (window.spaceman.Bitcoin.price) {
                     let usdAmount;
-                    usdAmount = ((int/100000000)*USD).toFixed(2)
+                    usdAmount = ((int/100000000)*window.spaceman.Bitcoin.price).toFixed(2)
                     warn.innerText = "Approximate amount in Cuckbucks:  $" + usdAmount
                     warn.style.color = "#35be33"
                     warn.style.display = "block"
