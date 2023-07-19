@@ -89,7 +89,10 @@ function makeElementMyProblems() {
         }
     })
     if (found === 0) {
-        document.appendChild(makeParagraph("You do not appear to have solved any problems.\n\n* Claim a problem on the problem tracker\n*Solve the problem with a pull request\n*Ask whoever logged the problem to verify that the problem no longer exists, and close the problem. Any maintainer can also do this."))
+        problems.appendChild(makeParagraph("You do not appear to have solved any problems.\n\n" +
+            "* Claim a problem on the problem tracker\n\n" +
+            "* Solve the problem with a pull request\n\n" +
+            "* Ask whoever logged the problem to verify that the problem no longer exists, and close the problem. Any maintainer can also do this."))
     }
     return problems
 }
