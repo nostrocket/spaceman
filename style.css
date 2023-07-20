@@ -142,10 +142,15 @@ button:focus-visible {
   border-style: solid;
   border-color: rgb(250, 122, 11);
   border-width: medium;
-  background-color: rgb(44, 14, 87);
+  background-color: rgba(68, 30, 133, 0);
   margin: 1%;
   margin-bottom: 3%;
   padding: 0.5%;
+  max-width: 800px;
+}
+
+.alert {
+  background-color: rgba(201, 13, 13, 0.79);
 }
 
 .label {

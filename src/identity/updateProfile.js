@@ -15,6 +15,7 @@ export function updateAccountDetails() {
         let accountState = identities().filter(item => item.Account === window.spaceman.pubkey)
         if (accountState.length === 0) {
             let form = document.createElement("div")
+            form.className = "notice"
             form.appendChild(usernameAndBioForm())
             form.appendChild(bioButtons(function () {
                 if (document.getElementById( 'name input' ).valueOf().readOnly) {
@@ -32,8 +33,8 @@ export function updateAccountDetails() {
                 }
 
             }))
-            box.appendChild(form)
             box.appendChild(paidRelayNotice())
+            box.appendChild(form)
     }
         if (accountState.length > 0) {
             console.log(accountState)
@@ -83,7 +84,7 @@ function bioButtons(onclick) {
 function createUsernameAndBioForm(haveExistingKind0,username){
     let div = document.createElement("div")
     div.id = window.spaceman.pubkey
-    div.appendChild(makeH3("Create your Nostrocket Permanym"))
+    div.appendChild(makeH3("Create your Nostrocket Permanym Now"))
     div.appendChild(makeParagraph("* The first step to joining the Identity Tree is to set your Permanym   " +
         "\n* You SHOULD use your existing Nostr pubkey so that existing Nostrocketers can see that you're not a spammer or bad actor   " +
         "\n* Nostrocket permanyms **cannot** be changed once set for your Pubkey   " +
@@ -95,14 +96,14 @@ function createUsernameAndBioForm(haveExistingKind0,username){
     if (haveExistingKind0) {
         kind0.replaceChildren(makeParagraph("### Found a Kind 0 event for your pubkey: \nSubmit this form to claim **" + kind0Objects.get(window.spaceman.pubkey).name + "** now."))
     }
-    div.appendChild(kind0)
     div.appendChild(makeTextInput("Permanym", "Permanym", "name input", 20, username))
+    div.appendChild(kind0)
     return div
 }
 
 function paidRelayNotice() {
     let div = document.createElement("div")
-    div.className = "notice"
+    div.className = "notice alert"
     div.appendChild(makeParagraph("You MUST be a member of the Nostrocket paid relay `wss://nostr.688.org` to publish events here.   " +
         "\nThis is to prevent spam, and one day it might be enough sats to pay for relay upkeep.   " +
         "\nThe fee is currently 1000 sats for 2016 blocks."))
