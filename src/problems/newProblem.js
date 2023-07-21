@@ -54,7 +54,7 @@
 //                 }
 //             }
 //         })
-//         div.appendChild(createButton("Advanced", function () {
+//         div.appendChild(makeButton("Advanced", function () {
 //             div.replaceChildren(newProblemForm())
 //         }))
 //     })
@@ -198,7 +198,7 @@
 //     return b
 // }
 //
-// function createButton(name, onclick, classname) {
+// function makeButton(name, onclick, classname) {
 //     let b = document.createElement("button")
 //     if (name) {
 //         b.innerText = name
@@ -227,7 +227,7 @@
 //         div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
 //     }
 //     div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, ""))
-//     div.appendChild(createButton("Publish!",
+//     div.appendChild(makeButton("Publish!",
 //         function () {
 //             //create anchor event
 //             nip07signer.user().then(async (user) => {

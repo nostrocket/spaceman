@@ -1,6 +1,6 @@
 import {waitForStateReady} from "../state/state.js";
 import './problems.css'
-import {createButton, makeH3, makeItem, makeLinkWithOnclick, makeParagraph, spacer} from "../helpers/markdown.js";
+import {makeButton, makeH3, makeItem, makeLinkWithOnclick, makeParagraph, spacer} from "../helpers/markdown.js";
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
@@ -290,7 +290,7 @@ function makeCommentForm(problemID, commentID) {
     let box = document.createElement("div")
     box.className = "comment_box"
     box.appendChild(makeTextField("Your Comment", "", "comment input", 0, "Markdown **is** supported."))
-    box.appendChild(createButton("Submit", () => {
+    box.appendChild(makeButton("Submit", () => {
         if (document.getElementById("comment input").value) {
             let ndkEvent = new NDKEvent(ndk);
             ndkEvent.kind = 1
@@ -364,7 +364,7 @@ function makeProblemForm(parentAnchor, existingAnchorEventID) {
         div.appendChild(makeTextInput("Parent ID", "ID of the parent problem", "parent input", 64, ""))
     }
     div.appendChild(makeTextField("Problem Description", "Explain the problem in as much detail as necessary", "description input", 0, prefilledProblemBody))
-    div.appendChild(createButton("Publish!",
+    div.appendChild(makeButton("Publish!",
         function () {
             //create anchor event
             nip07signer.user().then(async (user) => {
@@ -504,4 +504,11 @@ function makeAnchorEvent(parentAnchor, title, description) {
     if (d.length > 0) {ndkEvent.tags.push(d)}
     ndkEvent.tags.push(["op", "nostrocket.problem.create"])
     return ndkEvent
+}
+
+export function problemTitle(problem) {
+    if (window.spaceman.CurrentState.state.problems[problem]) {
+        return window.spaceman.CurrentState.state.problems[problem].Title
+    }
+    return "Problem title not found"
 }

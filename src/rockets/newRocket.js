@@ -2,7 +2,7 @@ import "./rockets.css"
 import {makeTextInput} from "../helpers/forms.js";
 import {makeUnsignedEvent, publish, signAsynchronously} from "../helpers/events.js";
 import {waitForStateReady} from "../state/state.js";
-import {createButton, makeH3, makeH4, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
+import {makeButton, makeH3, makeH4, makeItem, makeParagraph, makeText} from "../helpers/markdown.js";
 import {getIdentityByAccount} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
@@ -102,7 +102,7 @@ function createElementRocket(rocket){
         }
     } else {
         s.appendChild(makeText("No merits have been created under this rocket (yet)"))
-        s.appendChild(createButton("Create Initial Merits", () => {
+        s.appendChild(makeButton("Create Initial Merits", () => {
             let ndkEvent = eventCreateInitialMerits(rocket.RocketUID, rocket.RocketName)
             // console.log(rocket)
             // console.log(ndkEvent)

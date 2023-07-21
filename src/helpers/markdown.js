@@ -90,7 +90,7 @@ export function spacer(deliminator) {
     return s
 }
 
-export function createButton(name, onclick, classname) {
+export function makeButton(name, onclick, classname) {
     let b = document.createElement("button")
     if (name) {
         b.innerText = name
