@@ -4,9 +4,13 @@ import {waitForStateReady} from "../state/state.js";
 import {makeTags} from "../helpers/tags.js";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {ndk} from "../../main.ts";
+import {viewMeritRequests} from "./viewMeritRequests.js";
 
 export function newMeritRequest() {
     let d = document.createElement("div")
+    d.appendChild(makeLinkWithOnclick("View Merit Requests", ()=>{
+        d.replaceChildren(viewMeritRequests())
+    }))
     d.appendChild(makeElementCalculateAmount())
     d.appendChild(makeElementMyProblems())
     d.appendChild(makeElementRockets())
