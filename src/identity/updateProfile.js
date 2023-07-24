@@ -84,7 +84,7 @@ function bioButtons(onclick) {
 function createUsernameAndBioForm(haveExistingKind0,username){
     let div = document.createElement("div")
     div.id = window.spaceman.pubkey
-    div.appendChild(makeH3("Create your Nostrocket Permanym Now"))
+    div.appendChild(makeH3("Claim Your Nostrocket Permanym Now"))
     div.appendChild(makeParagraph("* The first step to joining the Identity Tree is to set your Permanym   " +
         "\n* You SHOULD use your existing Nostr pubkey so that existing Nostrocketers can see that you're not a spammer or bad actor   " +
         "\n* Nostrocket permanyms **cannot** be changed once set for your Pubkey   " +

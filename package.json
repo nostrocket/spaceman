@@ -18,6 +18,7 @@
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@nostr-dev-kit/ndk": "^0.3.141",
     "@types/node": "^20.1.4",
+    "alby-tools": "^3.2.0",
     "hotjs": "^1.0.9",
     "nostr-tools": "^1.10.1",
     "showdown": "^2.1.0"

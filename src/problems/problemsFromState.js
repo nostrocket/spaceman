@@ -4,7 +4,7 @@ import {makeButton, makeH3, makeItem, makeLinkWithOnclick, makeParagraph, spacer
 import {makeTextField, makeTextInput} from "../helpers/forms.js";
 import {ndk, nip07signer} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
-import {addReplayProtection} from "../helpers/tags.js";
+import {addReplayProtection, makeTags} from "../helpers/tags.js";
 import {beginListeningForComments, createElementAllComments} from "./comments.js";
 import {enmapReply} from "./events.js";
 import { nip19 } from "nostr-tools";
@@ -132,6 +132,20 @@ function createElementProblemAnchor(problem, preview) {
                     div.innerText = "EDIT THIS PROBLEM"
                     let form = makeProblemForm(problem.Parent, problem.UID)
                     form.id = problem.UID + "_edit"
+                    div.appendChild(form)
+                    d.appendChild(div)
+                }
+            }))
+            actionBox.appendChild(spacer("|"))
+
+            //TAG
+            actionBox.appendChild(makeLinkWithOnclick("tag", ()=>{
+                if (!document.getElementById(problem.UID + "_tag")) {
+                    let div = document.createElement("div")
+                    div.className = "problem_form"
+                    div.innerText = "TAG THIS PROBLEM"
+                    let form = makeTagForm(problem.UID)
+                    form.id = problem.UID + "_tag"
                     div.appendChild(form)
                     d.appendChild(div)
                 }
@@ -347,6 +361,29 @@ const defaultProblemTitle = "Problem: describe the problem you face or have obse
 const defaultProblemDescription = "" +
     "Explain the problem as clearly as possible. Markdown **is supported**.\n\n" +
     "#### Solution: If you have an idea of what the solution might be, include it."
+
+function makeTagForm(problemID) {
+    let div = document.createElement("div")
+    div.appendChild(makeTextInput("Tag ID", "tag ID", "tag input", 64, ""))
+    div.appendChild(makeButton("submit", ()=>{
+        let tagID = document.getElementById('tag input').value
+        if (tagID.length !== 64) {
+            alert("invalid tag ID")
+            return null
+        }
+        let ndkEvent = new NDKEvent(ndk);
+        ndkEvent.kind = 1;
+        ndkEvent.content = ""
+        ndkEvent.tags = makeTags(window.spaceman.pubkey)
+        ndkEvent.tags.push(["e", problemID, "", "repy"])
+        ndkEvent.tags.push(["op", "nostrocket.problem.modify.tag", tagID])
+        ndkEvent.tags.push(["op", "nostrocket.problem.modify.target", problemID])
+        ndkEvent.publish().then(()=>{
+            console.log(ndkEvent.rawEvent())
+        })
+    }))
+    return div
+}
 
 function makeProblemForm(parentAnchor, existingAnchorEventID) {
     let div = document.createElement("div")

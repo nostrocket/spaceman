@@ -1,6 +1,12 @@
 import {getReplayForAccount, pubkeyInIdentity} from "../state/state.js";
 
 export function makeTags(pubkey, type, r){
+    if (!pubkey) {
+        if (!window.spaceman.pubkey) {
+            alert("could not find pubkey")
+            return
+        }
+    }
     let tags = [];
     tags = [["e", window.spaceman.rootevents.IgnitionEvent, "", "root"]]
     if (type === "identity") {tags.push(["e", window.spaceman.rootevents.IdentityRoot, "", "reply"])}
