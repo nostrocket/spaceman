@@ -10,7 +10,7 @@ export function createElementAllComments(problemID) {
     let commentDiv = document.createElement("div")
     commentDiv.id = problemID + "_comments"
     replies.forEach(reply => {
-        if (isTaggedWith(reply, problemID)) {
+        if (shouldDisplayOnProblem(reply, problemID)) {
             comments.push(reply)
         }
         // let tc = getTagContent(reply, "reply", "e")
@@ -26,17 +26,23 @@ export function createElementAllComments(problemID) {
     return commentDiv
 }
 
-function isTaggedWith(event, requestedTag) {
+function shouldDisplayOnProblem(event, problemID) {
+    let hideIfIncludes = ["title", "description"]
     let r = false
+    let hide = false
     event.tags.forEach(tag => {
         tag.forEach(tagInner => {
-            if (tagInner === requestedTag) {
-                r = true
+            if (tagInner === problemID) {
+                if (tag.length === 4) {
+                    r = true
+                }
+            }
+            if (hideIfIncludes.includes(tagInner)) {
+                hide = true
             }
         })
     })
-
-    return r
+    return (r && !hide)
 }
 
 function createElementComment(commentEvent) {
