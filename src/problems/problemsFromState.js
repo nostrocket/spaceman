@@ -96,11 +96,11 @@ function createElementProblemAnchor(problem, preview) {
         if (window.spaceman.CurrentState.state.identity[problem.CreatedBy] && !problemIsClosedAndThisIsAPreview) {
             p.appendChild(makeParagraph("Logged by: " + "[" + window.spaceman.CurrentState.state.identity[problem.CreatedBy].Name + "](" + "https://snort.social/p/"+problem.CreatedBy+")"))
             if (window.spaceman.CurrentState.state.rockets) {
-                let name = "nostrocket"
               Object.keys(window.spaceman.CurrentState.state.rockets).forEach(k => {
-                  if (window.spaceman.CurrentState.state.rockets[k].ProblemID === problem.UID) {
-                      name = window.spaceman.CurrentState.state.rockets[k].RocketName
-                      rocketName.className = "rocketname notnostrocket"
+                  if (window.spaceman.CurrentState.state.rockets[problem.Rocket]) {
+                      name = window.spaceman.CurrentState.state.rockets[problem.Rocket].RocketName
+                      rocketName.className = "rocketname"
+                      rocketName.style.backgroundColor = "#" + problem.Rocket.substring(12, 18) //10 16
                   }
               })
                 rocketName.innerText = "🚀" + name + "🚀"
@@ -144,7 +144,8 @@ function createElementProblemAnchor(problem, preview) {
                     let div = document.createElement("div")
                     div.className = "problem_form"
                     div.innerText = "TAG THIS PROBLEM"
-                    let form = makeTagForm(problem.UID)
+                    let message = "I'm tagging [" + problem.Title + "]"
+                    let form = makeTagForm(problem.UID, message)
                     form.id = problem.UID + "_tag"
                     div.appendChild(form)
                     d.appendChild(div)
@@ -362,7 +363,7 @@ const defaultProblemDescription = "" +
     "Explain the problem as clearly as possible. Markdown **is supported**.\n\n" +
     "#### Solution: If you have an idea of what the solution might be, include it."
 
-function makeTagForm(problemID) {
+function makeTagForm(problemID, message) {
     let div = document.createElement("div")
     div.appendChild(makeTextInput("Tag ID", "tag ID", "tag input", 64, ""))
     div.appendChild(makeButton("submit", ()=>{
@@ -371,9 +372,12 @@ function makeTagForm(problemID) {
             alert("invalid tag ID")
             return null
         }
+        if (window.spaceman.CurrentState.state.rockets[tagID]) {
+            message = message + " with the Rocket: " + window.spaceman.CurrentState.state.rockets[tagID].RocketName
+        }
         let ndkEvent = new NDKEvent(ndk);
         ndkEvent.kind = 1;
-        ndkEvent.content = ""
+        ndkEvent.content = message
         ndkEvent.tags = makeTags(window.spaceman.pubkey)
         ndkEvent.tags.push(["e", problemID, "", "repy"])
         ndkEvent.tags.push(["op", "nostrocket.problem.modify.tag", tagID])
