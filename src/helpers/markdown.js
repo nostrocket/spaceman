@@ -15,20 +15,13 @@ const bindings = Object.keys(classMap)
         replace: `<${key} class="${classMap[key]}" $1>`
     }));
 
-
 export function makeParagraph(markdown) {
-    let d;
-    d = document.createElement("div")
-    let md;
-    md = new showdown.Converter({
+    let md = new showdown.Converter({
         extensions: [...bindings]
     })
-    let ht = md.makeHtml(markdown)
     let mdht = document.createElement("div")
-    mdht.innerHTML = ht
-    d.appendChild(mdht)
-    d.appendChild(document.createElement("br"))
-    return d
+    mdht.innerHTML = md.makeHtml(markdown)
+    return mdht
 }
 
 export function makeLink(url, text) {
@@ -48,7 +41,7 @@ export function makeLinkWithOnclick(name, onclick, classname) {
     }
     b.className = "link"
     if (classname) {
-        b.className = classname
+        b.className += " " + classname
     }
     return b
 }

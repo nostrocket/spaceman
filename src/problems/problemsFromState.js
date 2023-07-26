@@ -8,6 +8,7 @@ import {addReplayProtection, makeTags} from "../helpers/tags.js";
 import {beginListeningForComments, createElementAllComments} from "./comments.js";
 import {enmapReply} from "./events.js";
 import { nip19 } from "nostr-tools";
+import {makeElementViewProblemBodyPreview} from "./view.js";
 export function createProblemsFromState() {
     let div = document.createElement("div")
     div.id = "problems"
@@ -46,7 +47,7 @@ function createElementProblemPreview(problemID) {
     return createElementProblemAnchor(window.spaceman.CurrentState.state.problems[problemID], true)
 }
 
-function createElementProblemFullView(problemID) {
+export function createElementProblemFullView(problemID) {
     return createElementProblemAnchor(window.spaceman.CurrentState.state.problems[problemID], false)
 }
 
@@ -75,20 +76,20 @@ function createElementProblemAnchor(problem, preview) {
         p.id = problem.UID + "_problem"
         let title = makeH3(problem.Title)
         p.appendChild(title)
-        let bod = document.createElement("div")
         if (preview) {
-            if (!problem.Closed) {
-                bod = makeParagraph(problem.Body.substring(0, 280) + "...")
+            if (problem.Closed) {
+                let readMore = makeLinkWithOnclick("read more", ()=>{
+                    let div = document.getElementById("problems")
+                    if (div) {
+                        div.replaceChildren(createElementProblemFullView(problem.UID))
+                    }
+                }, "readmore_closed")
+                title.appendChild(spacer())
+                title.appendChild(readMore)
             }
-
-            let readMore = makeLinkWithOnclick("read more...", ()=>{
-                let div = document.getElementById("problems")
-                if (div) {
-                    div.replaceChildren(createElementProblemFullView(problem.UID))
-                }
-            })
-            bod.appendChild(readMore)
-            p.appendChild(bod)
+            if (!problem.Closed) {
+                p.appendChild(makeElementViewProblemBodyPreview(problem))
+            }
         } else {
             p.appendChild(makeParagraph(problem.Body))
         }

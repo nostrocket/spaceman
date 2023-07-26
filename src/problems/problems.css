@@ -92,3 +92,7 @@
     padding: 2px;
     font-weight: bold;
 }
+
+.readmore_closed {
+    display: inline-block;
+}
