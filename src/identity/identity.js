@@ -124,25 +124,39 @@ function makeIdentityLayout(){
     return d
 }
 
-function createAddButton(identity,onclick) {
+function createAddButton(identity,maintainer) {
     // Create a button element
     const button = document.createElement("button");
     button.id = identity.Account+'_button'
     // Set some properties for the button
     button.textContent = "Add to Identity Tree";
+    if (maintainer) {
+        button.textContent = "Add to Maintainer Tree";
+    }
 
     // Add an event listener to the button
     button.onclick = function () {
         let failed = true
         if (state.pubkeyInIdentity(window.spaceman.pubkey)) {
-            const USH = state.identities().find(x => x.Account === window.spaceman.pubkey).UniqueSovereignBy
-            if (USH != null && USH !== '') {
-                failed = false
-                addToIdentityTree(identity.Account, identity.PermanymEventID)
+            if (maintainer) {
+                const Maintainer = state.identities().find(x => x.Account === window.spaceman.pubkey).MaintainerBy
+                if (Maintainer != null && Maintainer !== '') {
+                    failed = false
+                    addToIdentityTree(identity.Account, "", true)
+                }
             }
+            if (!maintainer) {
+                const USH = state.identities().find(x => x.Account === window.spaceman.pubkey).UniqueSovereignBy
+                if (USH != null && USH !== '') {
+                    failed = false
+                    addToIdentityTree(identity.Account, identity.PermanymEventID)
+                }
+            }
+
         }
         if (failed) {
-            alert("You need to be in the Identity Tree first to add others identity.")
+            if (!maintainer) {alert("You need to be in the Identity Tree first to add others identity.")}
+            if (maintainer) {alert("You need to be a Maintainer to add a new Maintainer!")}
         }
 
     }
@@ -151,13 +165,18 @@ function createAddButton(identity,onclick) {
     return button;
 }
 
-async function addToIdentityTree(account, requestingEventID) {
-    let content;
-    content = "I've added you to the Identity Tree. Welcome to Nostrocket! 🫂"//JSON.stringify({target: account, maintainer: false, ush: true, character: false})
+async function addToIdentityTree(account, requestingEventID, maintainer) {
+    let content = "I've added you to the Identity Tree. Welcome to Nostrocket! 🫂"//JSON.stringify({target: account, maintainer: false, ush: true, character: false})
+    if (maintainer) {content = "I've added you to the Maintainer Tree. Welcome to Nostrocket! 🫂"}
     let tags;
     tags = makeTags(window.spaceman.pubkey, "identity")
-    tags.push(["op", "nostrocket.identity.ush", account])
-    tags.push(["e", requestingEventID, "", "reply"])
+    if (!maintainer) {
+        tags.push(["op", "nostrocket.identity.ush", account])
+        tags.push(["e", requestingEventID, "", "reply"])
+    }
+    if (maintainer) {
+        tags.push(["op", "nostrocket.identity.maintainer", account])
+    }
     let ndkEvent = new NDKEvent(ndk);
     ndkEvent.kind = 1
     ndkEvent.content = content
@@ -209,6 +228,9 @@ function makePerson(identity, full) {
             let order = makeItem("Account Number", identity.Order)
             order.className = "order"
             p.appendChild(order)
+            if (identity.MaintainerBy.length === 0) {
+                p.appendChild(createAddButton(identity, true))
+            }
         } else {
             if (identity.UniqueSovereignBy === null || identity.UniqueSovereignBy === ''){
                 p.appendChild(createAddButton(identity))
