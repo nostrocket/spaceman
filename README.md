@@ -1,5 +1,5 @@
 # spaceman
-This repo doesn't have an issue tracker because we are using Nostrocket to track problems. Please view the problem tracker using [Spacemen](nostrocket.github.io/spaceman)
+This repo doesn't have an issue tracker because we are using Nostrocket to track problems. Please view the problem tracker using [Spacemen](https://nostrocket.github.io/spaceman/)
 ## Architecture
 Spaceman is a Nostrocket client.
 Nostrocket Engine is where events are parsed and used to build the current state of Nostrocket.   
