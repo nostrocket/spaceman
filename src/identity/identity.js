@@ -7,7 +7,6 @@ import './identity.css'
 import {makeLink, makeLinkWithOnclick, makeParagraph} from "../helpers/markdown.js";
 import {getKind0Object, kind0Objects, waitForKind0Ready} from "./kind0.js";
 
-
 export default function renderIdentityLayout() {
     state.waitForStateReady(()=>{
         if (!window.spaceman.pubkey) {
@@ -155,7 +154,7 @@ function createAddButton(identity,maintainer) {
 
         }
         if (failed) {
-            if (!maintainer) {alert("You need to be in the Identity Tree first to add others identity.")}
+            if (!maintainer) {alert("You need to be in the Identity Tree first before you can add others to it.")}
             if (maintainer) {alert("You need to be a Maintainer to add a new Maintainer!")}
         }
 

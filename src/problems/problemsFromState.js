@@ -9,6 +9,7 @@ import {beginListeningForComments, createElementAllComments} from "./comments.js
 import {enmapReply} from "./events.js";
 import { nip19 } from "nostr-tools";
 import {makeElementViewProblemBodyPreview} from "./view.js";
+
 export function createProblemsFromState() {
     let div = document.createElement("div")
     div.id = "problems"
@@ -153,7 +154,7 @@ function createElementProblemAnchor(problem, preview) {
                 }
             }))
             actionBox.appendChild(spacer("|"))
-            
+
             //CLAIM
             if (problem.ClaimedBy === "" && !problem.Closed) {
                 actionBox.appendChild(makeLinkWithOnclick("claim", ()=>{
@@ -264,7 +265,7 @@ function createElementProblemAnchor(problem, preview) {
             //PRINT TO CONSOLE
             actionBox.appendChild(makeLinkWithOnclick("print", ()=>{
                 console.log(problem)
-                
+
             }))
             actionBox.appendChild(spacer("|"))
             //SHARE
@@ -278,9 +279,9 @@ function createElementProblemAnchor(problem, preview) {
                     // navigator.clipboard.writeText("https://snort.social/e/"+nip19.noteEncode(problem.UID));
                     window.open("https://snort.social/e/"+nip19.noteEncode(problem.UID))
                 }))
-               
+
             }
-            
+
             //actionBox.append(edit, spacer("|"), claim, spacer("|"), close, spacer("|"), comment, spacer("|"), newProblem, spacer("|"), printToConsole)
         }
         d.append(p, actionBox, c)

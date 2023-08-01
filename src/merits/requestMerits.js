@@ -13,7 +13,7 @@ export function newMeritRequest() {
     }))
     d.appendChild(makeElementCalculateAmount())
     d.appendChild(makeElementMyProblems())
-    d.appendChild(makeElementRockets())
+    d.append(makeH3("Which Rocket do you want to ask to pay for this?"), makeElementRockets())
     d.appendChild(makeElementNewMeritRequestForm())
     return d
 }
@@ -62,9 +62,8 @@ function makeElementNewMeritRequestForm() {
     return div
 }
 
-function makeElementRockets() {
+export function makeElementRockets() {
     let problems = document.createElement("div")
-    problems.appendChild(makeH3("Which Rocket do you want to ask to pay for this?"))
     let found = 0
     Object.values(window.spaceman.CurrentState.state.rockets).forEach(m => {
             found++
