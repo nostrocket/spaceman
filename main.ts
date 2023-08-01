@@ -4,7 +4,7 @@ import renderIdentities from './src/identity/identity.js'
 
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
-import { payments } from "./src/payments/createPayment.js"
+import { createNewProduct } from "./src/payments/createPayment.js"
 import { newRocket } from "./src/rockets/newRocket.js";
 import { newMeritRequest } from "./src/merits/requestMerits.js";
 import { updateAccountDetails } from "./src/identity/updateProfile.js";
@@ -17,6 +17,7 @@ import { beginListeningForEvents } from "./src/helpers/events";
 import "@fontsource/ubuntu/700.css";
 import { loading } from "./src/helpers/loading";
 import { waitForStateReadyPromise } from "./src/state/state";
+import {prefetchProductInfo} from "./src/payments/prefetch.js"
 declare global {
     interface Window { spaceman: any; }
 }
@@ -61,7 +62,7 @@ window.spaceman.Views.merits = () => {
 
 window.spaceman.Views.payments = () => {
     waitForStateReadyPromise.then(() => {
-        document.getElementById("content").replaceChildren(payments())
+        document.getElementById("content").replaceChildren(createNewProduct())
     })
 }
 
@@ -230,3 +231,7 @@ function prices() {
 }
 
 testLn()
+
+waitForStateReadyPromise.then(() => {
+    prefetchProductInfo()
+})

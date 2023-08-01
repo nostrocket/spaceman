@@ -1,15 +1,20 @@
 import { LightningAddress } from "alby-tools";
 import {waitForStateReady} from "../state/state.js";
-import {makeH3, makeParagraph} from "../helpers/markdown.js";
+import {makeH3, makeLinkWithOnclick, makeParagraph} from "../helpers/markdown.js";
 import {makeTextInput} from "../helpers/forms.js";
 import {makeElementRockets} from "../merits/requestMerits.js";
 import {ndk} from "../../main.ts";
 import {NDKEvent} from "@nostr-dev-kit/ndk";
 import {makeTags} from "../helpers/tags.js";
+import {viewMeritRequests} from "../merits/viewMeritRequests.js";
+import {viewProducts} from "./viewProducts.js";
 
-export function payments() {
+export function createNewProduct() {
     let d = document.createElement("div")
-    d.appendChild(makeH3("Products and Payments"))
+    d.appendChild(makeLinkWithOnclick("[View Products]", ()=>{
+        d.replaceChildren(viewProducts())
+    }))
+    d.appendChild(makeH3("Create New Product"))
     d.append(makeH3("Which Rocket should this product belong to?"), makeElementRockets())
     d.appendChild(createElementNewProduct())
     return d
@@ -64,11 +69,11 @@ export function payments() {
 
     function newProductEvent(rocket, info, amount) {
         let tags;
-        tags = makeTags(window.spaceman.pubkey, "payments")
+        tags = makeTags(window.spaceman.pubkey, "createNewProduct")
         tags.push(["e", rocket, "", "reply"]);
-        tags.push(["op", "nostrocket.payments.product.new.rocket", rocket])
-        tags.push(["op", "nostrocket.payments.product.new.info", info])
-        tags.push(["op", "nostrocket.payments.product.new.amount", amount])
+        tags.push(["op", "nostrocket.createNewProduct.product.new.rocket", rocket])
+        tags.push(["op", "nostrocket.createNewProduct.product.new.info", info])
+        tags.push(["op", "nostrocket.createNewProduct.product.new.amount", amount])
         let ndkEvent = new NDKEvent(ndk);
         ndkEvent.kind = 1
         ndkEvent.content = "I'm creating a new product that costs " + amount + " sats. The product information is in event nostr:" +

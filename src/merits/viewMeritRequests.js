@@ -53,7 +53,7 @@ function blackballeEvent(rocket, requestID, targetPubkey, problemID) {
     console.log(e)
 }
 
-function makeElementRocket(name) {
+export function makeElementRocket(name) {
     let d = document.createElement("div")
     d.className = "new_mirv"
     let rocketName = document.createElement("div")

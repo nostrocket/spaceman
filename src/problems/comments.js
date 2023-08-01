@@ -80,12 +80,8 @@ export function beginListeningForComments(ids) {
 
         sub.on('event', event => {
             if (event.kind === 641804 || event.kind === 1) {
-                if (event.id === "6271433eeb795687f985f9b8f04cc9108d3850433621b6804dce0cc2ae53801f") {
-                    console.log("GOT IT 66")
-                }
                 enmapReply(event)
             }
         })
     }
-
 }
