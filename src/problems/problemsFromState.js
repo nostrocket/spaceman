@@ -480,7 +480,7 @@ function create641804(problemID, operation, problemTitle) {
             break;
         case "abandon":
             ndkEvent.tags.push(["op", "nostrocket.problem.abandon", problemID])
-            ndkEvent.content = "I previously claimed [" + message + "] on the nostrocket problem tracker, but I'm not abandoning it and freeing it up for other people to claim."
+            ndkEvent.content = ""//"I previously claimed [" + message + "] on the nostrocket problem tracker, but I'm not abandoning it and freeing it up for other people to claim."
             break;
         case "close":
             ndkEvent.tags.push(["op", "nostrocket.problem.close", problemID])

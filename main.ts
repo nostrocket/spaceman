@@ -9,7 +9,7 @@ import { newRocket } from "./src/rockets/newRocket.js";
 import { newMeritRequest } from "./src/merits/requestMerits.js";
 import { updateAccountDetails } from "./src/identity/updateProfile.js";
 import { createProblemsFromState } from "./src/problems/problemsFromState.js"
-import { testLn } from "./src/payments/createPayment.js"
+import { testLn } from "./src/payments/lightning.js"
 import NDK, { NDKEvent, NDKNip07Signer, NDKFilter, NDKSubscription } from "@nostr-dev-kit/ndk";
 import * as nt from 'nostr-tools';
 import { generateKeyPair } from "crypto";

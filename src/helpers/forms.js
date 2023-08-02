@@ -24,7 +24,7 @@ export function makeTextInput(label, placeholder, id, maxlength, existing) {
     d.appendChild(textInput)
     textInput.className = "input"
     textInput.type = "text"
-    if (existing.length > 0) {
+    if (existing.length > 0 || existing > 0) {
         textInput.value = existing
     }
     textInput.placeholder = placeholder
