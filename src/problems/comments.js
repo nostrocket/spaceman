@@ -13,12 +13,6 @@ export function createElementAllComments(problemID) {
         if (shouldDisplayOnProblem(reply, problemID)) {
             comments.push(reply)
         }
-        // let tc = getTagContent(reply, "reply", "e")
-        // if (tc) {
-        //     if (tc === problemID) {
-        //        comments.push(reply)
-        //     }
-        // }
     })
     comments.forEach(comment => {
         commentDiv.appendChild(createElementComment(comment))
@@ -42,6 +36,7 @@ function shouldDisplayOnProblem(event, problemID) {
             }
         })
     })
+    if (event.content.length === 0) {hide = true}
     return (r && !hide)
 }
 
