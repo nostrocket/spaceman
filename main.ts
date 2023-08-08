@@ -104,6 +104,12 @@ async function initializeNDK() {
         // sub.start()
         // sub.on()
         window.spaceman.ndk = ndk
+        // const pablo = ndk.getUser({
+        //     npub: "npub1l2vyh47mk2p0qlsku7hg0vn29faehy9hy34ygaclpn66ukqp3afqutajft"
+        // });
+        // await pablo.fetchProfile();
+        //testndk()
+        //testZap()
         return ndk
     } catch (e) {
         console.log(e)

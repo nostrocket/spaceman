@@ -19,6 +19,7 @@
     "@nostr-dev-kit/ndk": "^0.8.5",
     "@types/node": "^20.1.4",
     "alby-tools": "^3.2.0",
+    "fetch-json": "^3.2.0",
     "hotjs": "^1.0.9",
     "nostr-tools": "^1.10.1",
     "showdown": "^2.1.0"

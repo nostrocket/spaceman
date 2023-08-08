@@ -4,6 +4,7 @@ import {makeElementRocket, viewMeritRequests} from "../merits/viewMeritRequests.
 import {createNewProduct} from "./createPayment.js";
 import {replies} from "../problems/events.js";
 import {modifyProduct} from "./modifyProduct.js";
+import {PayForProduct} from "./zaps.ts";
 
 export function viewProducts() {
     let d = document.createElement("div")
@@ -36,7 +37,34 @@ function makeElementProduct(product, renderDiv, rocket) {
     }
     d.append(
         makeButton("Buy Now for " + product.Amount + " sats", function () {
-        alert("not yet implemented")
+            console.log(product)
+            let amount = parseInt(product.Amount, 10)
+            PayForProduct(product.NextPayment.LUD06, product.NextPayment.Pubkey, amount, product.NextPayment.Callback, product.UID).then(x=>{
+                console.log(x)
+                if (typeof window.webln !== 'undefined') {
+                    console.log('WebLN is available!');
+                    window.webln.enable().then(()=>{
+                        console.log("enabled")
+                        webln.sendPayment(x["pr"]).then(response=>{
+                            console.log(response)
+                        }).catch(reason => {
+                            console.log(reason)
+                        })
+                    })
+                }
+                // if (window.webln) {
+                //     // zap in one go with WebLN (https://www.webln.guide) (easiest for web apps)
+                //     const response = await ln.zap(zapArgs); // signs zap request event, generates invoice and pays it
+                //     console.log(response.preimage); // print the preimage
+                // }
+                // else {
+                //     // or manually (create an invoice and give it to the user to pay)
+                //     const invoice = await ln.zapInvoice(zapArgs); // generates a zap invoice
+                //     console.log(invoice.paymentRequest); // print the payment request
+                //     await invoice.isPaid(); // check the payment status as descibed above
+                // }
+            })
+        //alert("not yet implemented")
     }),
         spacer(),
         makeButton("Modify this product", ()=>{
