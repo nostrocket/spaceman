@@ -11,7 +11,7 @@ export function createElementAllComments(problemID) {
     commentDiv.id = problemID + "_comments"
     replies.forEach(reply => {
         if (shouldDisplayOnProblem(reply, problemID)) {
-            comments.push(reply)
+            comments.unshift(reply)
         }
     })
     comments.forEach(comment => {
