@@ -1,10 +1,10 @@
 # spaceman
-This repo doesn't have an issue tracker because we are using Nostrocket to track problems. Please view the problem tracker using [Spacemen](https://nostrocket.github.io/spaceman/)
+This repo doesn't have an issue tracker because we are using Nostrocket to track problems. Please view the problem tracker using [Spaceman](https://nostrocket.github.io/spaceman/)
 ## Architecture
 Spaceman is a Nostrocket client.
 Nostrocket Engine is where events are parsed and used to build the current state of Nostrocket.   
 
-Nostrocket Engine subscribes to the Nostrocket Ignition Tree, all events in this thread are parsed against the Nostrocket Protocol. The way it parses events depends on:
+Nostrocket Engine subscribes to the Nostrocket Ignition Tree. All events in this thread are parsed against the Nostrocket Protocol. The way it parses events depends on:
 - the event Kind and Tags
 - the location of the event in the Ignition Tree (which branch of the tree the event is in)
 
