@@ -4,7 +4,8 @@ import {makeElementRocket, viewMeritRequests} from "../merits/viewMeritRequests.
 import {createNewProduct} from "./createPayment.js";
 import {replies} from "../problems/events.js";
 import {modifyProduct} from "./modifyProduct.js";
-import {PayForProduct} from "./zaps.ts";
+import {PayForProduct} from "./zaps.js";
+//import {PayForProduct} from "./zaps.js";
 
 export function viewProducts() {
     let d = document.createElement("div")
