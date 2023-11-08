@@ -1,4 +1,6 @@
-# spaceman
+# spaceman: retired
+Spaceman has served its purpose and is now retired.
+
 This repo doesn't have an issue tracker because we are using Nostrocket to track problems. Please view the problem tracker using [Spacemen](https://nostrocket.github.io/spaceman/)
 ## Architecture
 Spaceman is a Nostrocket client.
